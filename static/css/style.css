@@ -6109,3 +6109,158 @@ COMPACT ANALYTICS GRAPHS
 
 
 }
+/* =========================================================
+   DAILY CROWD FORECAST
+========================================================= */
+
+.daily-forecast-section {
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+.daily-forecast-card {
+    padding: 28px;
+}
+
+.forecast-subtitle {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.daily-chart-container {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    margin-top: 28px;
+    margin-bottom: 28px;
+}
+
+.daily-forecast-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.forecast-summary-item {
+    padding: 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--card-bg);
+}
+
+.forecast-summary-item span {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.forecast-summary-item strong {
+    display: block;
+    font-size: 22px;
+    margin-bottom: 5px;
+}
+
+.forecast-summary-item small {
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+
+    .daily-forecast-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .daily-chart-container {
+        height: 300px;
+    }
+
+}
+/* =========================================================
+   OPERATIONAL ACTION PLAN
+========================================================= */
+
+.operational-plan-card {
+    align-items: flex-start;
+}
+
+.operational-plan-card .recommendation-content {
+    width: 100%;
+}
+
+.action-plan-intro {
+    margin-top: 8px;
+    margin-bottom: 20px;
+    opacity: 0.75;
+    line-height: 1.6;
+}
+
+.operational-actions {
+    display: grid;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.operational-action-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+
+    padding: 16px;
+
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.action-icon {
+    min-width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    background: rgba(22, 160, 133, 0.14);
+}
+
+.action-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+}
+
+.operational-action-item p {
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.decision-support-note {
+    margin-top: 18px;
+
+    padding: 13px 15px;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+    line-height: 1.6;
+
+    opacity: 0.75;
+}

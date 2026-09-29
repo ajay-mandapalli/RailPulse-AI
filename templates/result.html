@@ -379,30 +379,237 @@
 
         <!-- RECOMMENDATION + MODEL -->
         <section class="result-bottom-grid">
+            <!-- DAILY CROWD FORECAST -->
 
-            <div class="recommendation-card">
+{% if daily_forecast %}
 
-                <div class="recommendation-icon">
-                    !
+<section class="daily-forecast-section">
+
+    <div class="dashboard-card daily-forecast-card">
+
+        <div class="card-heading">
+
+            <div>
+                <span class="section-label">
+                    DAILY CROWD FORECAST
+                </span>
+
+                <h3>
+                    Passenger Demand Throughout the Day
+                </h3>
+
+                <p class="forecast-subtitle">
+                    {{ prediction['from_station'] }}
+                    →
+                    {{ prediction['to_station'] }}
+                    ·
+                    {{ prediction['prediction_date'] }}
+                </p>
+            </div>
+
+            <span class="active-badge">
+                ESN FORECAST
+            </span>
+
+        </div>
+
+
+        <!-- GRAPH -->
+
+        <div class="daily-chart-container">
+
+            <canvas id="dailyCrowdChart"></canvas>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="daily-forecast-summary">
+
+            {% if highest_forecast %}
+
+            <div class="forecast-summary-item">
+
+                <span>
+                    HIGHEST DEMAND
+                </span>
+
+                <strong>
+                    {{ highest_forecast['time'] }}
+                </strong>
+
+                <small>
+                    {{ highest_forecast['passengers'] }}
+                    passengers
+                </small>
+
+            </div>
+
+            {% endif %}
+
+
+            {% if lowest_forecast %}
+
+            <div class="forecast-summary-item">
+
+                <span>
+                    LOWEST DEMAND
+                </span>
+
+                <strong>
+                    {{ lowest_forecast['time'] }}
+                </strong>
+
+                <small>
+                    {{ lowest_forecast['passengers'] }}
+                    passengers
+                </small>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="forecast-summary-item">
+
+                <span>
+                    HIGH-DEMAND SLOTS
+                </span>
+
+                <strong>
+                    {{ high_demand_times|length }}
+                </strong>
+
+                <small>
+                    {% if high_demand_times %}
+                        {{ high_demand_times|join(', ') }}
+                    {% else %}
+                        No high-demand periods
+                    {% endif %}
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="forecast-explanation">
+
+            <span class="forecast-info-icon">ℹ</span>
+
+            <p>
+                This daily view compares ESN passenger-demand
+                predictions across the available departure slots
+                for the selected MMTS route.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endif %}
+
+            <div class="recommendation-card operational-plan-card">
+
+    <div class="recommendation-content">
+
+        <span>
+            OPERATIONAL ACTION PLAN
+        </span>
+
+        <h3>
+            Demand-Based Planning Guidance
+        </h3>
+
+        <p class="action-plan-intro">
+            Decision-support guidance based on the predicted
+            passenger demand for this service.
+        </p>
+
+
+        <div class="operational-actions">
+
+            <!-- CAPACITY -->
+
+            <div class="operational-action-item">
+
+                <div class="action-icon">
+                    CP
                 </div>
 
-                <div class="recommendation-content">
-
-                    <span>
-                        OPERATIONAL RECOMMENDATION
+                <div>
+                    <span class="action-label">
+                        CAPACITY PLANNING
                     </span>
 
-                    <h3>
-                        Demand-Based Planning Guidance
-                    </h3>
-
                     <p>
-                        {{ recommendation }}
+                        {{ recommendation['capacity'] }}
                     </p>
-
                 </div>
 
             </div>
+
+
+            <!-- CROWD MANAGEMENT -->
+
+            <div class="operational-action-item">
+
+                <div class="action-icon">
+                    CM
+                </div>
+
+                <div>
+                    <span class="action-label">
+                        CROWD MANAGEMENT
+                    </span>
+
+                    <p>
+                        {{ recommendation['crowd'] }}
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- SERVICE PLANNING -->
+
+            <div class="operational-action-item">
+
+                <div class="action-icon">
+                    SP
+                </div>
+
+                <div>
+                    <span class="action-label">
+                        SERVICE PLANNING
+                    </span>
+
+                    <p>
+                        {{ recommendation['planning'] }}
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="decision-support-note">
+
+            <strong>Decision Support:</strong>
+
+            Recommendations should be considered together with
+            actual train capacity, platform conditions, service
+            availability and operational constraints.
+
+        </div>
+
+    </div>
+
+</div>
 
 
             <div class="dashboard-card result-model-card">
@@ -483,6 +690,140 @@
     </main>
 
 </div>
+
+
+{% if daily_forecast %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const dailyForecast =
+    {{ daily_forecast | tojson }};
+
+const labels =
+    dailyForecast.map(
+        item => item.time
+    );
+
+const passengerData =
+    dailyForecast.map(
+        item => item.passengers
+    );
+
+
+const ctx =
+    document
+    .getElementById("dailyCrowdChart")
+    .getContext("2d");
+
+
+new Chart(ctx, {
+
+    type: "line",
+
+    data: {
+
+        labels: labels,
+
+        datasets: [{
+
+            label: "Predicted Passengers",
+
+            data: passengerData,
+
+            borderColor: "#16a085",
+
+            backgroundColor: "rgba(22, 160, 133, 0.12)",
+
+            borderWidth: 3,
+
+            pointRadius: 5,
+
+            pointHoverRadius: 7,
+
+            tension: 0.35,
+
+            fill: true
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        interaction: {
+            intersect: false,
+            mode: "index"
+        },
+
+        plugins: {
+
+            legend: {
+                display: false
+            },
+
+            tooltip: {
+
+                callbacks: {
+
+                    afterLabel: function(context) {
+
+                        const value = context.raw;
+
+                        if (value >= 643) {
+                            return "Demand: High";
+                        }
+
+                        if (value >= 403) {
+                            return "Demand: Medium";
+                        }
+
+                        return "Demand: Low";
+                    }
+
+                }
+
+            }
+
+        },
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true,
+
+                title: {
+                    display: true,
+                    text: "Predicted Passengers"
+                }
+
+            },
+
+            x: {
+
+                title: {
+                    display: true,
+                    text: "Departure Time"
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+{% endif %}
+
 
 </body>
 </html>

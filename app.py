@@ -483,38 +483,81 @@ def get_recommendation(
 
     if demand_level == "High":
 
-        return (
-            "High passenger demand expected. "
-            "Consider additional coaches or increased "
-            "service frequency for this route."
-        )
+        return {
+            "capacity": (
+                "Consider additional coach or service capacity "
+                "where operationally feasible."
+            ),
+
+            "crowd": (
+                "Increase monitoring of platform and boarding "
+                "areas because high passenger demand is expected."
+            ),
+
+            "planning": (
+                "Review nearby high-demand departure slots and "
+                "prepare for possible passenger accumulation."
+            )
+        }
 
 
     elif demand_level == "Medium":
 
         if peak_status == "Peak":
 
-            return (
-                "Moderate demand during a peak period. "
-                "Monitor platform crowding and maintain "
-                "adequate coach capacity."
-            )
+            return {
+                "capacity": (
+                    "Maintain adequate service capacity for the "
+                    "expected moderate demand."
+                ),
 
-        return (
-            "Moderate passenger demand expected. "
-            "Normal service capacity should be maintained "
-            "with routine monitoring."
-        )
+                "crowd": (
+                    "Monitor platform crowding closely because "
+                    "this journey occurs during a peak period."
+                ),
+
+                "planning": (
+                    "Review adjacent departure slots for possible "
+                    "increases in passenger demand."
+                )
+            }
+
+        return {
+            "capacity": (
+                "Normal planned service capacity should be "
+                "sufficient for the expected demand."
+            ),
+
+            "crowd": (
+                "Continue routine monitoring of passenger flow "
+                "at the platform and boarding areas."
+            ),
+
+            "planning": (
+                "Monitor nearby departure slots for changes in "
+                "passenger demand."
+            )
+        }
 
 
     else:
 
-        return (
-            "Low passenger demand expected. "
-            "Standard service capacity is likely sufficient."
-        )
+        return {
+            "capacity": (
+                "Standard service capacity is likely sufficient "
+                "for the predicted passenger demand."
+            ),
 
+            "crowd": (
+                "Routine platform and boarding-area monitoring "
+                "should be sufficient."
+            ),
 
+            "planning": (
+                "No additional demand-management action is "
+                "indicated by the current forecast."
+            )
+        }
 # ============================================================
 # 14. BUILD SEQUENCE FOR REAL PREDICTION
 # ============================================================
@@ -580,7 +623,90 @@ def build_prediction_sequence(
     return scaled_sequence.astype(
         np.float32
     )
+# ============================================================
+# DAILY CROWD FORECAST
+# ============================================================
 
+def generate_daily_crowd_forecast(
+    from_station,
+    to_station,
+    prediction_date
+):
+
+    route_rows = df[
+        (df["from_station"] == from_station)
+        &
+        (df["to_station"] == to_station)
+    ].copy()
+
+    if route_rows.empty:
+        return []
+
+    available_times = (
+        route_rows["departure_time"]
+        .astype(str)
+        .drop_duplicates()
+        .tolist()
+    )
+
+    # Sort departure times correctly
+    available_times = sorted(
+        available_times,
+        key=lambda x: pd.to_datetime(
+            x,
+            format="%H:%M"
+        ).time()
+    )
+
+    daily_forecast = []
+
+    for departure_time in available_times:
+
+        sequence = build_prediction_sequence(
+            from_station,
+            to_station,
+            departure_time,
+            prediction_date
+        )
+
+        if sequence is None:
+            continue
+
+        # Create ESN reservoir state
+        reservoir_state = create_esn_state(
+            sequence
+        )
+
+        # ESN prediction
+        scaled_prediction = (
+            esn_readout.predict(
+                reservoir_state
+            )
+            .reshape(-1, 1)
+        )
+
+        passenger_prediction = (
+            y_scaler.inverse_transform(
+                scaled_prediction
+            )[0][0]
+        )
+
+        predicted_passengers = max(
+            0,
+            int(round(passenger_prediction))
+        )
+
+        demand_level = get_demand_level(
+            predicted_passengers
+        )
+
+        daily_forecast.append({
+            "time": departure_time,
+            "passengers": predicted_passengers,
+            "demand": demand_level
+        })
+
+    return daily_forecast
 
 # ============================================================
 # 15. LOGIN ROUTE
@@ -1112,13 +1238,50 @@ def prediction_result(prediction_id):
     time_period = get_time_period(
         selected_datetime.hour
     )
+        # --------------------------------------------------------
+    # DAILY CROWD FORECAST
+    # --------------------------------------------------------
+
+    daily_forecast = generate_daily_crowd_forecast(
+        prediction["from_station"],
+        prediction["to_station"],
+        prediction["prediction_date"]
+    )
+
+    if daily_forecast:
+
+        highest_forecast = max(
+            daily_forecast,
+            key=lambda x: x["passengers"]
+        )
+
+        lowest_forecast = min(
+            daily_forecast,
+            key=lambda x: x["passengers"]
+        )
+
+        high_demand_times = [
+            item["time"]
+            for item in daily_forecast
+            if item["demand"] == "High"
+        ]
+
+    else:
+
+        highest_forecast = None
+        lowest_forecast = None
+        high_demand_times = []
 
 
     return render_template(
         "result.html",
         prediction=prediction,
         recommendation=recommendation,
-        time_period=time_period
+        time_period=time_period,
+        daily_forecast=daily_forecast,
+        highest_forecast=highest_forecast,
+        lowest_forecast=lowest_forecast,
+        high_demand_times=high_demand_times
     )
 
 
