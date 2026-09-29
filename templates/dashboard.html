@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RailPulse AI | Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="app-page">
+
+    <div class="app-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside class="sidebar">
+
+            <div class="sidebar-brand">
+
+                <div class="brand-icon">
+                    RP
+                </div>
+
+                <div>
+                    <h2>RailPulse AI</h2>
+                    <span>MMTS Intelligence</span>
+                </div>
+
+            </div>
+
+
+            <nav class="sidebar-nav">
+
+                <a href="{{ url_for('dashboard') }}"
+                   class="nav-link active">
+
+                    <span class="nav-icon">▦</span>
+
+                    <span>Dashboard</span>
+
+                </a>
+
+
+                <a href="{{ url_for('predict') }}"
+                   class="nav-link">
+
+                    <span class="nav-icon">➜</span>
+
+                    <span>New Prediction</span>
+
+                </a>
+
+
+                <a href="{{ url_for('analytics') }}"
+                   class="nav-link">
+
+                    <span class="nav-icon">◫</span>
+
+                    <span>Analytics</span>
+
+                </a>
+
+
+                <a href="{{ url_for('history') }}"
+                   class="nav-link">
+
+                    <span class="nav-icon">◷</span>
+
+                    <span>Prediction History</span>
+
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-model">
+
+                <span class="model-label">
+                    ACTIVE MODEL
+                </span>
+
+                <div class="model-row">
+
+                    <div class="model-status-dot"></div>
+
+                    <div>
+                        <strong>{{ selected_model }}</strong>
+                        <span>Operational</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div class="user-avatar">
+                        {{ session.get('full_name', 'A')[0] }}
+                    </div>
+
+                    <div class="user-details">
+
+                        <strong>
+                            {{ session.get('full_name', 'Administrator') }}
+                        </strong>
+
+                        <span>
+                            Transport Operations
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <a href="{{ url_for('logout') }}"
+                   class="logout-link">
+
+                    Logout
+
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             MAIN CONTENT
+        ====================================================== -->
+
+        <main class="main-content">
+
+            <!-- TOP BAR -->
+
+            <header class="topbar">
+
+                <div>
+
+                    <span class="page-eyebrow">
+                        OPERATIONS OVERVIEW
+                    </span>
+
+                    <h1>
+                        Hyderabad MMTS Dashboard
+                    </h1>
+
+                    <p>
+                        Passenger demand intelligence and
+                        route monitoring overview.
+                    </p>
+
+                </div>
+
+
+                <div class="topbar-actions">
+
+                    <div class="live-status">
+
+                        <span class="live-dot"></span>
+
+                        System Online
+
+                    </div>
+
+
+                    <a href="{{ url_for('predict') }}"
+                       class="primary-action">
+
+                        + New Prediction
+
+                    </a>
+
+                </div>
+
+            </header>
+
+
+            <!-- =================================================
+                 KPI CARDS
+            ================================================== -->
+
+            <section class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <span class="stat-label">
+                            DATA RECORDS
+                        </span>
+
+                        <div class="stat-icon">
+                            DB
+                        </div>
+
+                    </div>
+
+
+                    <h2>
+                        {{ "{:,}".format(total_records) }}
+                    </h2>
+
+                    <p>
+                        MMTS passenger observations
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <span class="stat-label">
+                            ROUTES ANALYZED
+                        </span>
+
+                        <div class="stat-icon">
+                            RT
+                        </div>
+
+                    </div>
+
+
+                    <h2>
+                        {{ total_routes }}
+                    </h2>
+
+                    <p>
+                        Origin-destination routes
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <span class="stat-label">
+                            AVG PASSENGER DEMAND
+                        </span>
+
+                        <div class="stat-icon">
+                            PX
+                        </div>
+
+                    </div>
+
+
+                    <h2>
+                        {{ "{:,}".format(average_demand) }}
+                    </h2>
+
+                    <p>
+                        Average passengers per observation
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-card-top">
+
+                        <span class="stat-label">
+                            AI PREDICTIONS
+                        </span>
+
+                        <div class="stat-icon">
+                            AI
+                        </div>
+
+                    </div>
+
+
+                    <h2>
+                        {{ total_predictions }}
+                    </h2>
+
+                    <p>
+                        Predictions generated by RailPulse
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 MAIN DASHBOARD GRID
+            ================================================== -->
+
+            <section class="dashboard-grid">
+
+                <!-- MODEL PERFORMANCE -->
+
+                <div class="dashboard-card model-performance-card">
+
+                    <div class="card-heading">
+
+                        <div>
+
+                            <span class="section-label">
+                                MODEL INTELLIGENCE
+                            </span>
+
+                            <h3>
+                                Deployment Performance
+                            </h3>
+
+                        </div>
+
+
+                        <span class="active-badge">
+                            {{ selected_model }} ACTIVE
+                        </span>
+
+                    </div>
+
+
+                    <div class="model-overview">
+
+                        <div class="model-score">
+
+                            <div class="score-ring">
+
+                                <div>
+
+                                    <strong>
+                                        0.9175
+                                    </strong>
+
+                                    <span>
+                                        R² Score
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="metric-list">
+
+                            <div class="metric-item">
+
+                                <span>
+                                    Mean Absolute Error
+                                </span>
+
+                                <strong>
+                                    65.25
+                                </strong>
+
+                            </div>
+
+
+                            <div class="metric-item">
+
+                                <span>
+                                    Root Mean Squared Error
+                                </span>
+
+                                <strong>
+                                    90.25
+                                </strong>
+
+                            </div>
+
+
+                            <div class="metric-item">
+
+                                <span>
+                                    Sequence Length
+                                </span>
+
+                                <strong>
+                                    7
+                                </strong>
+
+                            </div>
+
+
+                            <div class="metric-item">
+
+                                <span>
+                                    Model Type
+                                </span>
+
+                                <strong>
+                                    ESN
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <a href="{{ url_for('analytics') }}"
+                       class="text-link">
+
+                        View complete model analytics →
+
+                    </a>
+
+                </div>
+
+
+                <!-- QUICK PREDICTION -->
+
+                <div class="dashboard-card prediction-cta-card">
+
+                    <span class="section-label">
+                        DEMAND FORECAST
+                    </span>
+
+                    <h3>
+                        Predict MMTS Passenger Demand
+                    </h3>
+
+                    <p>
+                        Select a route, date and departure time
+                        to estimate expected passenger demand
+                        using the deployed ESN model.
+                    </p>
+
+
+                    <div class="prediction-flow">
+
+                        <div>
+                            <span>01</span>
+                            <p>Select Route</p>
+                        </div>
+
+                        <div class="flow-line"></div>
+
+                        <div>
+                            <span>02</span>
+                            <p>Select Date & Time</p>
+                        </div>
+
+                        <div class="flow-line"></div>
+
+                        <div>
+                            <span>03</span>
+                            <p>Generate Forecast</p>
+                        </div>
+
+                    </div>
+
+
+                    <a href="{{ url_for('predict') }}"
+                       class="cta-button">
+
+                        Start New Prediction →
+
+                    </a>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 RECENT PREDICTIONS
+            ================================================== -->
+
+            <section class="dashboard-card recent-card">
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            RECENT ACTIVITY
+                        </span>
+
+                        <h3>
+                            Latest Predictions
+                        </h3>
+
+                    </div>
+
+
+                    <a href="{{ url_for('history') }}"
+                       class="text-link">
+
+                        View all →
+
+                    </a>
+
+                </div>
+
+
+                {% if recent_predictions %}
+
+                <div class="table-wrapper">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Route</th>
+
+                                <th>Date</th>
+
+                                <th>Departure</th>
+
+                                <th>Passengers</th>
+
+                                <th>Demand</th>
+
+                                <th>Model</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for row in recent_predictions %}
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        {{ row['from_station'] }}
+                                    </strong>
+
+                                    <span class="route-arrow">
+                                        →
+                                    </span>
+
+                                    {{ row['to_station'] }}
+
+                                </td>
+
+
+                                <td>
+                                    {{ row['prediction_date'] }}
+                                </td>
+
+
+                                <td>
+                                    {{ row['departure_time'] }}
+                                </td>
+
+
+                                <td class="passenger-value">
+                                    {{ row['predicted_passengers'] }}
+                                </td>
+
+
+                                <td>
+
+                                    <span class="
+                                        demand-pill
+                                        demand-{{ row['demand_level']|lower }}
+                                    ">
+
+                                        {{ row['demand_level'] }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="model-pill">
+                                        {{ row['model_used'] }}
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ◇
+                    </div>
+
+                    <h4>
+                        No predictions yet
+                    </h4>
+
+                    <p>
+                        Create your first passenger demand
+                        prediction to start building history.
+                    </p>
+
+                    <a href="{{ url_for('predict') }}"
+                       class="primary-action">
+
+                        Create Prediction
+
+                    </a>
+
+                </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <footer class="app-footer">
+
+                <span>
+                    RailPulse AI · Hyderabad MMTS Demand Intelligence
+                </span>
+
+                <span>
+                    © 2026 Mandapalli Ajaybabu
+                </span>
+
+            </footer>
+
+        </main>
+
+    </div>
+
+</body>
+
+</html>

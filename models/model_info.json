@@ -1,0 +1,33 @@
+{
+    "project": "RailPulse AI",
+    "dataset": "Hyderabad MMTS Passenger Demand",
+    "selected_model": "ESN",
+    "sequence_length": 7,
+    "features": [
+        "route_id",
+        "distance_km",
+        "hour_sin",
+        "hour_cos",
+        "dow_sin",
+        "dow_cos",
+        "month_sin",
+        "month_cos",
+        "is_weekend",
+        "is_holiday_num",
+        "is_peak_hour",
+        "previous_passenger_count",
+        "rolling_avg_3",
+        "rolling_avg_5"
+    ],
+    "target": "passenger_count",
+    "tcn": {
+        "mae": 70.74713134765625,
+        "rmse": 100.45398900118401,
+        "r2": 0.8977890610694885
+    },
+    "esn": {
+        "mae": 65.25042724609375,
+        "rmse": 90.25497465081219,
+        "r2": 0.9174902439117432
+    }
+}

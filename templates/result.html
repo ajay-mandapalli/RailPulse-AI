@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RailPulse AI | Prediction Result</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="app-page">
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+            <div class="brand-icon">RP</div>
+
+            <div>
+                <h2>RailPulse AI</h2>
+                <span>MMTS Intelligence</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard') }}"
+               class="nav-link">
+                <span class="nav-icon">▦</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('predict') }}"
+               class="nav-link active">
+                <span class="nav-icon">➜</span>
+                <span>New Prediction</span>
+            </a>
+
+            <a href="{{ url_for('analytics') }}"
+               class="nav-link">
+                <span class="nav-icon">◫</span>
+                <span>Analytics</span>
+            </a>
+
+            <a href="{{ url_for('history') }}"
+               class="nav-link">
+                <span class="nav-icon">◷</span>
+                <span>Prediction History</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-model">
+
+            <span class="model-label">
+                ACTIVE MODEL
+            </span>
+
+            <div class="model-row">
+
+                <div class="model-status-dot"></div>
+
+                <div>
+                    <strong>ESN</strong>
+                    <span>Operational</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="sidebar-footer">
+
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+                    {{ session.get('full_name', 'A')[0] }}
+                </div>
+
+                <div class="user-details">
+                    <strong>
+                        {{ session.get('full_name', 'Administrator') }}
+                    </strong>
+                    <span>Transport Operations</span>
+                </div>
+
+            </div>
+
+            <a href="{{ url_for('logout') }}"
+               class="logout-link">
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="topbar result-topbar">
+
+            <div>
+                <span class="page-eyebrow">
+                    FORECAST RESULT
+                </span>
+
+                <h1>Passenger Demand Intelligence</h1>
+
+                <p>
+                    ESN-generated MMTS passenger demand forecast
+                    for the selected journey.
+                </p>
+            </div>
+
+            <div class="topbar-actions">
+
+                <a href="{{ url_for('predict') }}"
+                   class="secondary-action">
+                    ← New Prediction
+                </a>
+
+                <div class="live-status">
+                    <span class="live-dot"></span>
+                    Forecast Complete
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- RESULT HERO -->
+        <section class="result-hero">
+
+            <div class="result-route-area">
+
+                <span class="result-kicker">
+                    SELECTED MMTS ROUTE
+                </span>
+
+                <div class="result-route">
+
+                    <div>
+                        <span>FROM</span>
+                        <strong>
+                            {{ prediction['from_station'] }}
+                        </strong>
+                    </div>
+
+                    <div class="result-route-line">
+                        <span></span>
+                        <div>→</div>
+                        <span></span>
+                    </div>
+
+                    <div>
+                        <span>TO</span>
+                        <strong>
+                            {{ prediction['to_station'] }}
+                        </strong>
+                    </div>
+
+                </div>
+
+                <div class="result-trip-meta">
+
+                    <span>
+                        {{ prediction['prediction_date'] }}
+                    </span>
+
+                    <span class="meta-dot"></span>
+
+                    <span>
+                        {{ prediction['departure_time'] }}
+                    </span>
+
+                    <span class="meta-dot"></span>
+
+                    <span>
+                        {{ time_period }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="forecast-status">
+                <span>MODEL</span>
+                <strong>{{ prediction['model_used'] }}</strong>
+                <small>Echo State Network</small>
+            </div>
+
+        </section>
+
+
+        <!-- MAIN RESULT -->
+        <section class="result-main-grid">
+
+            <!-- PASSENGER FORECAST -->
+            <div class="dashboard-card passenger-result-card">
+
+                <div class="card-heading">
+
+                    <div>
+                        <span class="section-label">
+                            PASSENGER FORECAST
+                        </span>
+
+                        <h3>Expected Demand</h3>
+                    </div>
+
+                    <span class="active-badge">
+                        PREDICTION COMPLETE
+                    </span>
+
+                </div>
+
+
+                <div class="passenger-display">
+
+                    <div class="passenger-number">
+
+                        <strong>{{ "{:,}".format(prediction['predicted_passengers']) }}</strong>
+<span>EXPECTED PASSENGERS</span>
+
+                    </div>
+
+
+                    <div class="demand-indicator">
+
+                        <span>
+                            DEMAND LEVEL
+                        </span>
+
+                        <div class="
+                            result-demand-badge
+                            result-demand-{{ prediction['demand_level']|lower }}
+                        ">
+                            {{ prediction['demand_level'] }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DEMAND SCALE -->
+                <div class="demand-scale-area">
+
+                    <div class="demand-scale">
+
+                        <div class="scale-low">
+                            <span>LOW</span>
+                        </div>
+
+                        <div class="scale-medium">
+                            <span>MEDIUM</span>
+                        </div>
+
+                        <div class="scale-high">
+                            <span>HIGH</span>
+                        </div>
+
+                    </div>
+
+                    <div class="scale-labels">
+
+                        <span>≤ 402</span>
+                        <span>403 – 642</span>
+                        <span>≥ 643</span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="forecast-explanation">
+
+                    <span class="forecast-info-icon">ℹ</span>
+
+                    <p>
+                        Passenger demand was estimated using the
+                        deployed Echo State Network and the previous
+                        historical observations available for this
+                        route and departure slot.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATUS -->
+            <div class="dashboard-card journey-status-card">
+
+                <span class="section-label">
+                    JOURNEY STATUS
+                </span>
+
+                <h3>Operational Context</h3>
+
+
+                <div class="status-list">
+
+                    <div class="status-item">
+
+                        <div class="status-icon">PK</div>
+
+                        <div>
+                            <span>Peak Status</span>
+
+                            <strong>
+                                {{ prediction['peak_status'] }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-item">
+
+                        <div class="status-icon">TP</div>
+
+                        <div>
+                            <span>Time Period</span>
+
+                            <strong>
+                                {{ time_period }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-item">
+
+                        <div class="status-icon">DM</div>
+
+                        <div>
+                            <span>Demand Classification</span>
+
+                            <strong>
+                                {{ prediction['demand_level'] }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="status-item">
+
+                        <div class="status-icon">ML</div>
+
+                        <div>
+                            <span>Prediction Model</span>
+
+                            <strong>
+                                {{ prediction['model_used'] }}
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- RECOMMENDATION + MODEL -->
+        <section class="result-bottom-grid">
+
+            <div class="recommendation-card">
+
+                <div class="recommendation-icon">
+                    !
+                </div>
+
+                <div class="recommendation-content">
+
+                    <span>
+                        OPERATIONAL RECOMMENDATION
+                    </span>
+
+                    <h3>
+                        Demand-Based Planning Guidance
+                    </h3>
+
+                    <p>
+                        {{ recommendation }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-card result-model-card">
+
+                <span class="section-label">
+                    MODEL INFORMATION
+                </span>
+
+                <div class="result-model-heading">
+
+                    <div>
+                        <h3>Echo State Network</h3>
+                        <p>Chronological test performance</p>
+                    </div>
+
+                    <span class="model-online-dot"></span>
+
+                </div>
+
+
+                <div class="result-metrics">
+
+                    <div>
+                        <span>R² SCORE</span>
+                        <strong>0.9175</strong>
+                    </div>
+
+                    <div>
+                        <span>MAE</span>
+                        <strong>65.25</strong>
+                    </div>
+
+                    <div>
+                        <span>RMSE</span>
+                        <strong>90.25</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ACTIONS -->
+        <section class="result-actions">
+
+            <a href="{{ url_for('predict') }}"
+               class="primary-action result-action-button">
+                + Generate Another Prediction
+            </a>
+
+            <a href="{{ url_for('history') }}"
+               class="result-outline-button">
+                View Prediction History
+            </a>
+
+            <a href="{{ url_for('analytics') }}"
+               class="result-outline-button">
+                Open Analytics
+            </a>
+
+        </section>
+
+
+        <footer class="app-footer">
+
+            <span>
+                RailPulse AI · Hyderabad MMTS Demand Intelligence
+            </span>
+
+            <span>
+                © 2026 Mandapalli Ajaybabu
+            </span>
+
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

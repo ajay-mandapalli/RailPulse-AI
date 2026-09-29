@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailPulse AI | Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="app-page">
+<div class="app-layout">
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">RP</div>
+            <div>
+                <h2>RailPulse AI</h2>
+                <span>MMTS Intelligence</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">
+                <span class="nav-icon">▦</span><span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('predict') }}" class="nav-link">
+                <span class="nav-icon">➜</span><span>New Prediction</span>
+            </a>
+
+            <a href="{{ url_for('analytics') }}" class="nav-link active">
+                <span class="nav-icon">◫</span><span>Analytics</span>
+            </a>
+
+            <a href="{{ url_for('history') }}" class="nav-link">
+                <span class="nav-icon">◷</span><span>Prediction History</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-model">
+            <span class="model-label">ACTIVE MODEL</span>
+            <div class="model-row">
+                <div class="model-status-dot"></div>
+                <div>
+                    <strong>ESN</strong>
+                    <span>Operational</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {{ session.get('full_name', 'A')[0] }}
+                </div>
+                <div class="user-details">
+                    <strong>{{ session.get('full_name', 'Administrator') }}</strong>
+                    <span>Transport Operations</span>
+                </div>
+            </div>
+
+            <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+        </div>
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <span class="page-eyebrow">MODEL ANALYTICS</span>
+                <h1>Demand Intelligence Analytics</h1>
+                <p>
+                    Performance analysis of the Temporal Convolutional
+                    Network and Echo State Network.
+                </p>
+            </div>
+
+            <div class="live-status">
+                <span class="live-dot"></span>
+                ESN Deployed
+            </div>
+        </header>
+
+
+        <!-- MODEL SUMMARY -->
+
+        <section class="analytics-kpis">
+
+            <div class="stat-card">
+                <span class="stat-label">SELECTED MODEL</span>
+                <h2>ESN</h2>
+                <p>Echo State Network</p>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">ESN R² SCORE</span>
+                <h2>0.9175</h2>
+                <p>Chronological test set</p>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">ESN MAE</span>
+                <h2>65.25</h2>
+                <p>Mean Absolute Error</p>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">ESN RMSE</span>
+                <h2>90.25</h2>
+                <p>Root Mean Squared Error</p>
+            </div>
+
+        </section>
+
+
+        <!-- COMPARISON TABLE -->
+
+        <section class="dashboard-card analytics-section">
+
+            <div class="card-heading">
+                <div>
+                    <span class="section-label">MODEL COMPARISON</span>
+                    <h3>TCN vs ESN Performance</h3>
+                </div>
+
+                <span class="active-badge">ESN SELECTED</span>
+            </div>
+
+            <div class="table-wrapper">
+
+                <table class="data-table model-table">
+
+                    <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>MAE ↓</th>
+                        <th>RMSE ↓</th>
+                        <th>R² ↑</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr>
+                        <td>
+                            <strong>Temporal Convolutional Network</strong>
+                            <small>TCN</small>
+                        </td>
+
+                        <td>70.75</td>
+                        <td>100.45</td>
+                        <td>0.8978</td>
+
+                        <td>
+                            <span class="comparison-badge">
+                                Evaluated
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr class="selected-model-row">
+                        <td>
+                            <strong>Echo State Network</strong>
+                            <small>ESN</small>
+                        </td>
+
+                        <td><strong>65.25</strong></td>
+                        <td><strong>90.25</strong></td>
+                        <td><strong>0.9175</strong></td>
+
+                        <td>
+                            <span class="active-badge">
+                                Deployed
+                            </span>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <div class="metric-help">
+                <span>MAE ↓ Lower is better</span>
+                <span>RMSE ↓ Lower is better</span>
+                <span>R² ↑ Higher is better</span>
+            </div>
+
+        </section>
+
+
+        <!-- MODEL COMPARISON GRAPH -->
+
+        <section class="dashboard-card analytics-section">
+
+            <span class="section-label">PERFORMANCE VISUALIZATION</span>
+            <h3 class="analytics-title">Model Comparison</h3>
+
+            <div class="analytics-image large-analysis-image">
+                <img
+                    src="{{ url_for('static', filename='results/model_comparison.png') }}"
+                    alt="TCN and ESN model comparison">
+            </div>
+
+        </section>
+
+
+        <!-- ACTUAL VS PREDICTED -->
+
+        <section class="analytics-two-column">
+
+            <div class="dashboard-card">
+
+                <span class="section-label">TCN EVALUATION</span>
+                <h3 class="analytics-title">
+                    TCN Actual vs Predicted
+                </h3>
+
+                <div class="analytics-image">
+                    <img
+                        src="{{ url_for('static', filename='results/tcn_actual_vs_predicted.png') }}"
+                        alt="TCN actual versus predicted">
+                </div>
+
+                <div class="graph-metrics">
+                    <span>MAE <strong>70.75</strong></span>
+                    <span>RMSE <strong>100.45</strong></span>
+                    <span>R² <strong>0.8978</strong></span>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-card">
+
+                <span class="section-label">ESN EVALUATION</span>
+                <h3 class="analytics-title">
+                    ESN Actual vs Predicted
+                </h3>
+
+                <div class="analytics-image">
+                    <img
+                        src="{{ url_for('static', filename='results/esn_actual_vs_predicted.png') }}"
+                        alt="ESN actual versus predicted">
+                </div>
+
+                <div class="graph-metrics">
+                    <span>MAE <strong>65.25</strong></span>
+                    <span>RMSE <strong>90.25</strong></span>
+                    <span>R² <strong>0.9175</strong></span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TCN TRAINING -->
+
+        <section class="dashboard-card analytics-section">
+
+            <span class="section-label">TRAINING ANALYSIS</span>
+            <h3 class="analytics-title">TCN Training & Validation Loss</h3>
+
+            <div class="analytics-image large-analysis-image">
+                <img
+                    src="{{ url_for('static', filename='results/tcn_loss.png') }}"
+                    alt="TCN training and validation loss">
+            </div>
+
+            <div class="analytics-note">
+                The TCN was trained using early stopping. The best
+                validation weights were restored automatically during training.
+            </div>
+
+        </section>
+
+
+        <!-- DATA INFORMATION -->
+
+        <section class="dashboard-card analytics-section">
+
+            <span class="section-label">DATASET PROFILE</span>
+            <h3 class="analytics-title">Hyderabad MMTS Dataset</h3>
+
+            <div class="dataset-grid">
+
+                <div>
+                    <span>Records</span>
+                    <strong>277,400</strong>
+                </div>
+
+                <div>
+                    <span>Routes</span>
+                    <strong>76</strong>
+                </div>
+
+                <div>
+                    <span>Stations</span>
+                    <strong>29</strong>
+                </div>
+
+                <div>
+                    <span>Passenger Range</span>
+                    <strong>105 – 2,189</strong>
+                </div>
+
+                <div>
+                    <span>Sequence Length</span>
+                    <strong>7</strong>
+                </div>
+
+                <div>
+                    <span>Target</span>
+                    <strong>Passenger Count</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer class="app-footer">
+            <span>RailPulse AI · Hyderabad MMTS Demand Intelligence</span>
+            <span>© 2026 Mandapalli Ajaybabu</span>
+        </footer>
+
+    </main>
+</div>
+</body>
+</html>

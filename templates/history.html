@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RailPulse AI | Prediction History</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="app-page">
+
+<div class="app-layout">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+            <div class="brand-icon">RP</div>
+
+            <div>
+                <h2>RailPulse AI</h2>
+                <span>MMTS Intelligence</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard') }}" class="nav-link">
+                <span class="nav-icon">▦</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('predict') }}" class="nav-link">
+                <span class="nav-icon">➜</span>
+                <span>New Prediction</span>
+            </a>
+
+            <a href="{{ url_for('analytics') }}" class="nav-link">
+                <span class="nav-icon">◫</span>
+                <span>Analytics</span>
+            </a>
+
+            <a href="{{ url_for('history') }}" class="nav-link active">
+                <span class="nav-icon">◷</span>
+                <span>Prediction History</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-model">
+            <span class="model-label">ACTIVE MODEL</span>
+
+            <div class="model-row">
+                <div class="model-status-dot"></div>
+
+                <div>
+                    <strong>ESN</strong>
+                    <span>Operational</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+                    {{ session.get('full_name', 'A')[0] }}
+                </div>
+
+                <div class="user-details">
+                    <strong>
+                        {{ session.get('full_name', 'Administrator') }}
+                    </strong>
+
+                    <span>Transport Operations</span>
+                </div>
+
+            </div>
+
+            <a href="{{ url_for('logout') }}"
+               class="logout-link">
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+                <span class="page-eyebrow">FORECAST RECORDS</span>
+
+                <h1>Prediction History</h1>
+
+                <p>
+                    Review passenger-demand forecasts generated
+                    by RailPulse AI.
+                </p>
+            </div>
+
+            <a href="{{ url_for('predict') }}"
+               class="primary-action">
+                + New Prediction
+            </a>
+
+        </header>
+
+
+        <section class="dashboard-card history-card">
+
+            <div class="card-heading">
+
+                <div>
+                    <span class="section-label">
+                        STORED PREDICTIONS
+                    </span>
+
+                    <h3>Demand Forecast Records</h3>
+                </div>
+
+            </div>
+
+
+            {% if predictions %}
+
+            <div class="table-wrapper">
+
+                <table class="data-table history-table">
+
+                    <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Route</th>
+                        <th>Travel Date</th>
+                        <th>Time</th>
+                        <th>Passengers</th>
+                        <th>Demand</th>
+                        <th>Peak Status</th>
+                        <th>Model</th>
+                        <th>Created</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for row in predictions %}
+
+                    <tr>
+
+                        <td>#{{ row['id'] }}</td>
+
+                        <td>
+                            <strong>{{ row['from_station'] }}</strong>
+                            <span class="route-arrow">→</span>
+                            {{ row['to_station'] }}
+                        </td>
+
+                        <td>
+                            {{ row['prediction_date'] }}
+                        </td>
+
+                        <td>
+                            {{ row['departure_time'] }}
+                        </td>
+
+                        <td class="passenger-value">
+                            {{ row['predicted_passengers'] }}
+                        </td>
+
+                        <td>
+                            <span class="
+                                demand-pill
+                                demand-{{ row['demand_level']|lower }}
+                            ">
+                                {{ row['demand_level'] }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ row['peak_status'] }}
+                        </td>
+
+                        <td>
+                            <span class="model-pill">
+                                {{ row['model_used'] }}
+                            </span>
+                        </td>
+
+                        <td>
+                            {{ row['created_at'] }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">◇</div>
+
+                <h4>No prediction history</h4>
+
+                <p>
+                    Generate your first passenger-demand
+                    forecast to create a history record.
+                </p>
+
+                <a href="{{ url_for('predict') }}"
+                   class="primary-action">
+                    Generate Prediction
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </section>
+
+
+        <footer class="app-footer">
+            <span>RailPulse AI · Hyderabad MMTS Demand Intelligence</span>
+            <span>© 2026 Mandapalli Ajaybabu</span>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>

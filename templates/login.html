@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RailPulse AI | Operations Portal</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="login-page">
+
+    <div class="login-shell">
+
+        <!-- LEFT SIDE -->
+        <section class="login-hero">
+
+            <div class="brand">
+                <div class="brand-icon">RP</div>
+
+                <div>
+                    <h2>RailPulse AI</h2>
+                    <span>MMTS Demand Intelligence</span>
+                </div>
+            </div>
+
+            <div class="hero-content">
+
+                <div class="system-badge">
+                    ● AI-POWERED TRANSPORT INTELLIGENCE
+                </div>
+
+                <h1>
+                    Predict demand.<br>
+                    Plan smarter.<br>
+                    <span>Move Hyderabad.</span>
+                </h1>
+
+                <p>
+                    An intelligent passenger demand forecasting
+                    platform designed for Hyderabad MMTS operations.
+                </p>
+
+                <div class="hero-stats">
+
+                    <div>
+                        <strong>277K+</strong>
+                        <span>Records Analyzed</span>
+                    </div>
+
+                    <div>
+                        <strong>76</strong>
+                        <span>Routes</span>
+                    </div>
+
+                    <div>
+                        <strong>ESN</strong>
+                        <span>Active Model</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="rail-decoration">
+                <div class="rail-line"></div>
+                <div class="rail-line"></div>
+            </div>
+
+        </section>
+
+
+        <!-- RIGHT SIDE -->
+        <section class="login-panel">
+
+            <div class="login-card">
+
+                <div class="mobile-brand">
+                    <div class="brand-icon">RP</div>
+                    <h2>RailPulse AI</h2>
+                </div>
+
+                <div class="login-heading">
+
+                    <span class="portal-label">
+                        TRANSPORT OPERATIONS PORTAL
+                    </span>
+
+                    <h2>Welcome back</h2>
+
+                    <p>
+                        Sign in to access the MMTS demand
+                        intelligence dashboard.
+                    </p>
+
+                </div>
+
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+
+                    {% if messages %}
+
+                        {% for category, message in messages %}
+
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                {% endwith %}
+
+
+                <form method="POST"
+                      action="{{ url_for('login') }}"
+                      class="login-form">
+
+                    <div class="form-group">
+
+                        <label for="username">
+                            Username
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">◉</span>
+
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                placeholder="Enter username"
+                                autocomplete="username"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">◆</span>
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                                aria-label="Show password"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="login-options">
+
+                        <label class="remember-option">
+
+                            <input type="checkbox">
+
+                            <span>Remember this device</span>
+
+                        </label>
+
+                        <span class="secure-label">
+                            Secure Access
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="login-button"
+                    >
+                        <span>Access Dashboard</span>
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+
+                <div class="login-security">
+
+                    <div class="security-icon">
+                        ✓
+                    </div>
+
+                    <p>
+                        Authorized personnel only.
+                        Your session is securely managed.
+                    </p>
+
+                </div>
+
+
+                <div class="login-footer">
+                    © 2026 Mandapalli Ajaybabu · RailPulse AI
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <script>
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const passwordToggle =
+            document.getElementById("passwordToggle");
+
+
+        passwordToggle.addEventListener(
+            "click",
+            function () {
+
+                if (passwordInput.type === "password") {
+
+                    passwordInput.type = "text";
+
+                    passwordToggle.textContent = "Hide";
+
+                } else {
+
+                    passwordInput.type = "password";
+
+                    passwordToggle.textContent = "Show";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

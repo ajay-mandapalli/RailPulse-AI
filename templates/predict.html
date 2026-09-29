@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RailPulse AI | Demand Prediction</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="app-page">
+
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">RP</div>
+
+            <div>
+                <h2>RailPulse AI</h2>
+                <span>MMTS Intelligence</span>
+            </div>
+
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="{{ url_for('dashboard') }}"
+               class="nav-link">
+                <span class="nav-icon">▦</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('predict') }}"
+               class="nav-link active">
+                <span class="nav-icon">➜</span>
+                <span>New Prediction</span>
+            </a>
+
+            <a href="{{ url_for('analytics') }}"
+               class="nav-link">
+                <span class="nav-icon">◫</span>
+                <span>Analytics</span>
+            </a>
+
+            <a href="{{ url_for('history') }}"
+               class="nav-link">
+                <span class="nav-icon">◷</span>
+                <span>Prediction History</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-model">
+
+            <span class="model-label">
+                ACTIVE MODEL
+            </span>
+
+            <div class="model-row">
+
+                <div class="model-status-dot"></div>
+
+                <div>
+                    <strong>ESN</strong>
+                    <span>Operational</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="sidebar-footer">
+
+            <div class="sidebar-user">
+
+                <div class="user-avatar">
+                    {{ session.get('full_name', 'A')[0] }}
+                </div>
+
+                <div class="user-details">
+
+                    <strong>
+                        {{ session.get('full_name', 'Administrator') }}
+                    </strong>
+
+                    <span>Transport Operations</span>
+
+                </div>
+
+            </div>
+
+            <a href="{{ url_for('logout') }}"
+               class="logout-link">
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+
+                <span class="page-eyebrow">
+                    DEMAND FORECASTING
+                </span>
+
+                <h1>Passenger Demand Prediction</h1>
+
+                <p>
+                    Generate an MMTS passenger demand forecast
+                    using historical route patterns.
+                </p>
+
+            </div>
+
+            <div class="live-status">
+                <span class="live-dot"></span>
+                ESN Model Online
+            </div>
+
+        </header>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <div class="prediction-page-grid">
+
+            <!-- FORM -->
+
+            <section class="dashboard-card prediction-form-card">
+
+                <div class="card-heading">
+
+                    <div>
+
+                        <span class="section-label">
+                            NEW FORECAST
+                        </span>
+
+                        <h3>
+                            Journey Information
+                        </h3>
+
+                    </div>
+
+                    <span class="active-badge">
+                        ESN ACTIVE
+                    </span>
+
+                </div>
+
+
+                <div class="prediction-info-banner">
+
+                    <div class="info-banner-icon">
+                        AI
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            AI Demand Forecast
+                        </strong>
+
+                        <p>
+                            Select the MMTS journey details.
+                            RailPulse automatically uses historical
+                            route demand and temporal patterns for
+                            prediction.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <form method="POST"
+                      action="{{ url_for('predict') }}"
+                      id="predictionForm"
+                      class="prediction-form">
+
+
+                    <!-- FROM -->
+
+                    <div class="prediction-field">
+
+                        <label for="from_station">
+
+                            <span class="field-number">
+                                01
+                            </span>
+
+                            From Station
+
+                        </label>
+
+                        <select
+                            id="from_station"
+                            name="from_station"
+                            required
+                        >
+
+                            <option value="">
+                                Select origin station
+                            </option>
+
+                            {% for station in stations %}
+
+                                <option value="{{ station }}">
+                                    {{ station }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <small>
+                            Select your MMTS origin station
+                        </small>
+
+                    </div>
+
+
+                    <!-- TO -->
+
+                    <div class="prediction-field">
+
+                        <label for="to_station">
+
+                            <span class="field-number">
+                                02
+                            </span>
+
+                            To Station
+
+                        </label>
+
+                        <select
+                            id="to_station"
+                            name="to_station"
+                            required
+                            disabled
+                        >
+
+                            <option value="">
+                                Select origin first
+                            </option>
+
+                        </select>
+
+                        <small>
+                            Destinations are filtered using
+                            available MMTS routes
+                        </small>
+
+                    </div>
+
+
+                    <!-- DATE -->
+
+                    <div class="prediction-field">
+
+                        <label for="prediction_date">
+
+                            <span class="field-number">
+                                03
+                            </span>
+
+                            Travel Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            id="prediction_date"
+                            name="prediction_date"
+                            required
+                        >
+
+                        <small>
+                            Select the date for demand forecasting
+                        </small>
+
+                    </div>
+
+
+                    <!-- TIME -->
+
+                    <div class="prediction-field">
+
+                        <label for="departure_time">
+
+                            <span class="field-number">
+                                04
+                            </span>
+
+                            Departure Time
+
+                        </label>
+
+                        <select
+                            id="departure_time"
+                            name="departure_time"
+                            required
+                            disabled
+                        >
+
+                            <option value="">
+                                Select route first
+                            </option>
+
+                        </select>
+
+                        <small>
+                            Only available departure slots for
+                            the selected route are shown
+                        </small>
+
+                    </div>
+
+
+                    <div class="prediction-summary">
+
+                        <span>
+                            FORECAST CONFIGURATION
+                        </span>
+
+                        <div>
+
+                            <p>
+                                Route
+                                <strong id="routePreview">
+                                    Not selected
+                                </strong>
+                            </p>
+
+                            <p>
+                                Model
+                                <strong>Echo State Network</strong>
+                            </p>
+
+                            <p>
+                                Historical Window
+                                <strong>7 observations</strong>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="generate-button"
+                        id="generateButton"
+                    >
+
+                        <span>
+                            Generate Demand Forecast
+                        </span>
+
+                        <span>→</span>
+
+                    </button>
+
+                </form>
+
+            </section>
+
+
+            <!-- RIGHT INFORMATION -->
+
+            <aside class="prediction-side">
+
+                <div class="dashboard-card prediction-process-card">
+
+                    <span class="section-label">
+                        HOW IT WORKS
+                    </span>
+
+                    <h3>
+                        Prediction Pipeline
+                    </h3>
+
+
+                    <div class="pipeline-list">
+
+                        <div class="pipeline-item">
+
+                            <span class="pipeline-number">
+                                1
+                            </span>
+
+                            <div>
+                                <strong>Journey Input</strong>
+                                <p>
+                                    Origin, destination, date and
+                                    departure slot are selected.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="pipeline-connector"></div>
+
+
+                        <div class="pipeline-item">
+
+                            <span class="pipeline-number">
+                                2
+                            </span>
+
+                            <div>
+                                <strong>Historical Retrieval</strong>
+                                <p>
+                                    The previous seven observations
+                                    for the same route and departure
+                                    slot are retrieved.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="pipeline-connector"></div>
+
+
+                        <div class="pipeline-item">
+
+                            <span class="pipeline-number">
+                                3
+                            </span>
+
+                            <div>
+                                <strong>ESN Processing</strong>
+                                <p>
+                                    Historical sequences pass through
+                                    the trained Echo State Network.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="pipeline-connector"></div>
+
+
+                        <div class="pipeline-item">
+
+                            <span class="pipeline-number">
+                                4
+                            </span>
+
+                            <div>
+                                <strong>Demand Intelligence</strong>
+                                <p>
+                                    RailPulse returns passenger demand,
+                                    demand level and operational guidance.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-card model-mini-card">
+
+                    <div class="mini-model-header">
+
+                        <div>
+
+                            <span class="section-label">
+                                DEPLOYED MODEL
+                            </span>
+
+                            <h3>
+                                Echo State Network
+                            </h3>
+
+                        </div>
+
+                        <span class="model-online-dot"></span>
+
+                    </div>
+
+
+                    <div class="mini-metrics">
+
+                        <div>
+                            <span>R²</span>
+                            <strong>0.9175</strong>
+                        </div>
+
+                        <div>
+                            <span>MAE</span>
+                            <strong>65.25</strong>
+                        </div>
+
+                        <div>
+                            <span>RMSE</span>
+                            <strong>90.25</strong>
+                        </div>
+
+                    </div>
+
+                    <p class="mini-model-note">
+                        Metrics obtained from the chronological
+                        MMTS test dataset.
+                    </p>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+
+        <footer class="app-footer">
+
+            <span>
+                RailPulse AI · Hyderabad MMTS Demand Intelligence
+            </span>
+
+            <span>
+                © 2026 Mandapalli Ajaybabu
+            </span>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    const fromStation =
+        document.getElementById("from_station");
+
+    const toStation =
+        document.getElementById("to_station");
+
+    const departureTime =
+        document.getElementById("departure_time");
+
+    const routePreview =
+        document.getElementById("routePreview");
+
+    const predictionForm =
+        document.getElementById("predictionForm");
+
+    const generateButton =
+        document.getElementById("generateButton");
+
+
+    /* -----------------------------------------------
+       ORIGIN → DESTINATION
+    ------------------------------------------------ */
+
+    fromStation.addEventListener(
+        "change",
+        async function () {
+
+            const origin = this.value;
+
+            toStation.innerHTML =
+                '<option value="">Loading destinations...</option>';
+
+            departureTime.innerHTML =
+                '<option value="">Select route first</option>';
+
+            departureTime.disabled = true;
+
+            routePreview.textContent =
+                "Not selected";
+
+
+            if (!origin) {
+
+                toStation.innerHTML =
+                    '<option value="">Select origin first</option>';
+
+                toStation.disabled = true;
+
+                return;
+            }
+
+
+            try {
+
+                const response = await fetch(
+                    `/api/destinations/${encodeURIComponent(origin)}`
+                );
+
+                if (!response.ok) {
+                    throw new Error("Destination request failed");
+                }
+
+                const destinations =
+                    await response.json();
+
+
+                toStation.innerHTML =
+                    '<option value="">Select destination station</option>';
+
+
+                destinations.forEach(
+                    function (station) {
+
+                        const option =
+                            document.createElement("option");
+
+                        option.value = station;
+
+                        option.textContent = station;
+
+                        toStation.appendChild(option);
+
+                    }
+                );
+
+
+                toStation.disabled = false;
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                toStation.innerHTML =
+                    '<option value="">Unable to load destinations</option>';
+
+                toStation.disabled = true;
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------------
+       DESTINATION → DEPARTURE TIMES
+    ------------------------------------------------ */
+
+    toStation.addEventListener(
+        "change",
+        async function () {
+
+            const origin =
+                fromStation.value;
+
+            const destination =
+                this.value;
+
+
+            if (!origin || !destination) {
+
+                departureTime.innerHTML =
+                    '<option value="">Select route first</option>';
+
+                departureTime.disabled = true;
+
+                routePreview.textContent =
+                    "Not selected";
+
+                return;
+            }
+
+
+            routePreview.textContent =
+                `${origin} → ${destination}`;
+
+
+            departureTime.innerHTML =
+                '<option value="">Loading departure times...</option>';
+
+            departureTime.disabled = true;
+
+
+            try {
+
+                const response = await fetch(
+                    `/api/times/${encodeURIComponent(origin)}/${encodeURIComponent(destination)}`
+                );
+
+                if (!response.ok) {
+                    throw new Error("Time request failed");
+                }
+
+                const times =
+                    await response.json();
+
+
+                departureTime.innerHTML =
+                    '<option value="">Select departure time</option>';
+
+
+                times.forEach(
+                    function (time) {
+
+                        const option =
+                            document.createElement("option");
+
+                        option.value = time;
+
+                        option.textContent = time;
+
+                        departureTime.appendChild(option);
+
+                    }
+                );
+
+
+                departureTime.disabled = false;
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                departureTime.innerHTML =
+                    '<option value="">Unable to load times</option>';
+
+                departureTime.disabled = true;
+
+            }
+
+        }
+    );
+
+
+    /* -----------------------------------------------
+       SUBMIT BUTTON STATE
+    ------------------------------------------------ */
+
+    predictionForm.addEventListener(
+        "submit",
+        function () {
+
+            generateButton.disabled = true;
+
+            generateButton.innerHTML =
+                "<span>Generating Forecast...</span><span>◌</span>";
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
