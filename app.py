@@ -1383,6 +1383,46 @@ def analytics():
     )
 
 
+@app.route("/route-map")
+def route_map():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    day_type = request.args.get("day_type", "")
+    departure_time = request.args.get("departure_time", "")
+    times = sorted(df["departure_time"].dropna().unique().tolist())
+    if day_type not in ("", "Weekday", "Weekend"):
+        day_type = ""
+    if departure_time not in times:
+        departure_time = ""
+    rows = df
+    if day_type:
+        rows = rows[rows["day_type"] == day_type]
+    if departure_time:
+        rows = rows[rows["departure_time"] == departure_time]
+    summary = rows.groupby(["from_station", "to_station"])["passenger_count"].agg(
+        average="mean", observations="count"
+    ).reset_index()
+    routes = []
+    for record in summary.to_dict("records"):
+        average = int(round(record["average"]))
+        routes.append({
+            "origin": record["from_station"],
+            "destination": record["to_station"],
+            "passengers": average,
+            "observations": int(record["observations"]),
+            "demand": get_demand_level(average),
+        })
+    routes.sort(key=lambda route: (-route["passengers"], route["origin"], route["destination"]))
+    stations = sorted(set(df["from_station"]) | set(df["to_station"]))
+    return render_template(
+        "route_map.html", routes=routes, stations=stations, times=times,
+        day_type=day_type, departure_time=departure_time,
+        date_start=df["datetime"].min().strftime("%d %b %Y"),
+        date_end=df["datetime"].max().strftime("%d %b %Y"),
+    )
+
+
 # ============================================================
 # 22. PREDICTION HISTORY
 # ============================================================

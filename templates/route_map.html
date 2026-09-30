@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailPulse | Route Demand Map</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="app-page">
+<div class="app-layout">
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">RP</div>
+            <div>
+                <h2>RailPulse</h2>
+                <span>MMTS Intelligence</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="{{ url_for('dashboard') }}" class="nav-link">
+                <span class="nav-icon">▦</span><span>Dashboard</span>
+            </a>
+
+            <a href="{{ url_for('predict') }}" class="nav-link">
+                <span class="nav-icon">➜</span><span>New Prediction</span>
+            </a>
+
+            <a href="{{ url_for('analytics') }}" class="nav-link">
+                <span class="nav-icon">◫</span><span>Analytics</span>
+            </a>
+
+            <a href="{{ url_for('history') }}" class="nav-link">
+                <span class="nav-icon">◷</span><span>Prediction History</span>
+            </a>
+                    <a href="{{ url_for('route_map') }}" class="nav-link active" aria-current="page" aria-label="Route Demand Map" title="Route Demand Map">
+                <span class="nav-icon" aria-hidden="true">&#9678;</span><span>Route Demand Map</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-model">
+            <span class="model-label">ACTIVE MODEL</span>
+            <div class="model-row">
+                <div class="model-status-dot"></div>
+                <div>
+                    <strong>ESN</strong>
+                    <span>Operational</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    {{ session.get('full_name', 'A')[0] }}
+                </div>
+                <div class="user-details">
+                    <strong>{{ session.get('full_name', 'Administrator') }}</strong>
+                    <span>Transport Operations</span>
+                </div>
+            </div>
+
+            <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+        </div>
+    </aside>
+
+
+    <main class="main-content route-map-page">
+        <header class="topbar">
+            <div>
+                <span class="page-eyebrow">EXPLORE THE NETWORK</span>
+                <h1>Route Demand Map</h1>
+                <p>Discover how passenger demand varies across Hyderabad MMTS routes.</p>
+            </div>
+            <a href="{{ url_for('predict') }}" class="primary-action">Make a prediction</a>
+        </header>
+        <form method="get" class="dashboard-card map-filters">
+            <div><label for="day-type">Day type</label>
+                <select name="day_type" id="day-type">
+                    <option value="">All days</option>
+                    {% for day in ['Weekday', 'Weekend'] %}<option value="{{ day }}" {% if day_type == day %}selected{% endif %}>{{ day }}</option>{% endfor %}
+                </select>
+            </div>
+            <div><label for="departure-time">Departure time</label>
+                <select name="departure_time" id="departure-time">
+                    <option value="">All departures</option>
+                    {% for time in times %}<option value="{{ time }}" {% if departure_time == time %}selected{% endif %}>{{ time }}</option>{% endfor %}
+                </select>
+            </div>
+            <button class="primary-action" type="submit">Apply filters</button>
+            <a href="{{ url_for('route_map') }}" class="map-reset">Reset all</a>
+        </form>
+        <p class="map-context">Average passengers per observation in the dataset, {{ date_start }} to {{ date_end }}. These are dataset averages, not live counts or model forecasts.</p>
+        <section class="map-summary" aria-label="Network summary">
+            <div><strong id="route-count">{{ routes|length }}</strong><span>Matching directional routes</span></div>
+            <div><strong>{{ stations|length }}</strong><span>Stations in the dataset</span></div>
+            <div><strong id="highest-demand">{{ routes[0].passengers if routes else 0 }}</strong><span>Highest route average</span></div>
+        </section>
+        <section class="dashboard-card network-card">
+            <div class="map-heading"><div><span class="section-label">HYDERABAD MMTS</span><h2>Follow the demand</h2></div>
+                <div class="map-legend" aria-label="Demand legend"><span class="legend-low">Low: 0-402</span><span class="legend-medium">Medium: 403-642</span><span class="legend-high">High: 643+</span></div>
+            </div>
+            <div class="map-explore-filters">
+                <div><label for="station-filter">Routes through a station</label><select id="station-filter"><option value="">All stations</option>{% for station in stations %}<option>{{ station }}</option>{% endfor %}</select></div>
+                <div><label for="demand-filter">Demand level</label><select id="demand-filter"><option value="">All levels</option><option>Low</option><option>Medium</option><option>High</option></select></div>
+                <div class="map-controls"><button type="button" id="map-zoom-in" aria-label="Zoom in">+</button><button type="button" id="map-zoom-out" aria-label="Zoom out">-</button><button type="button" id="map-fit">Fit map</button></div>
+            </div>
+            <p class="map-hint">Select a line or a route below to see its demand. Select a station to show connected routes. Scroll the map after zooming.</p>
+            <div class="network-viewport" id="network-viewport">
+                <svg id="network-map" viewBox="0 0 1120 1000" role="img" aria-labelledby="map-title map-description">
+                    <title id="map-title">Hyderabad MMTS route demand network</title>
+                    <desc id="map-description">Schematic station layout. Colored curves connect route endpoints; the route list below provides the same demand information.</desc>
+                    <defs><pattern id="map-grid" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#ddd7c8"/></pattern></defs>
+                    <rect width="1120" height="1000" fill="url(#map-grid)"/>
+                    <g id="map-routes"></g><g id="map-stations"></g>
+                </svg>
+            </div>
+            <p class="map-context">Schematic network map, not to geographic scale. Lines connect origin and destination stations; they do not trace the actual railway track.</p>
+            <div id="route-detail" class="route-detail" role="status" aria-live="polite">Select a route to inspect its average passenger demand.</div>
+        </section>
+        <section class="dashboard-card map-list-card">
+            <div class="map-heading"><h2>Routes by demand</h2><span id="route-list-status" role="status" aria-live="polite">{{ routes|length }} routes</span></div>
+            <p class="map-empty" id="map-empty" hidden>No routes match these filters. Try another station or demand level.</p>
+            <div class="route-list" id="route-list">
+                {% for route in routes %}
+                <button type="button" class="map-route-row" data-route-index="{{ loop.index0 }}" aria-pressed="false">
+                    <span class="route-name">{{ route.origin }} <span aria-label="to">&rarr;</span> {{ route.destination }}</span>
+                    <span class="route-demand demand-{{ route.demand|lower }}">{{ route.demand }}</span>
+                    <span class="route-average"><strong>{{ route.passengers }}</strong> avg. passengers</span>
+                </button>
+                {% endfor %}
+            </div>
+        </section>
+        <noscript><p class="map-context">Enable JavaScript for the interactive map and station filters. Route averages are listed above; day and departure filters still work.</p></noscript>
+        <footer class="app-footer"><span>RailPulse &middot; Hyderabad MMTS</span><span>Route demand explorer</span></footer>
+    </main>
+</div>
+<script id="route-map-data" type="application/json">{{ routes|tojson }}</script>
+<script src="{{ url_for('static', filename='js/route-map.js') }}" defer></script>
+</body>
+</html>
