@@ -1,0 +1,147 @@
+{
+  "Alwal": {
+    "lat": 17.5050368,
+    "lon": 78.514663,
+    "source": "https://www.openstreetmap.org/node/2923174835"
+  },
+  "Arts College": {
+    "lat": 17.417977,
+    "lon": 78.5200383,
+    "source": "https://www.openstreetmap.org/node/308586614"
+  },
+  "Begumpet": {
+    "lat": 17.4386951,
+    "lon": 78.4580969,
+    "source": "https://www.openstreetmap.org/node/343641073"
+  },
+  "Bharat Nagar": {
+    "lat": 17.4626026,
+    "lon": 78.4301562,
+    "source": "https://www.openstreetmap.org/node/1437209842"
+  },
+  "Bolarum": {
+    "lat": 17.5330679,
+    "lon": 78.5154568,
+    "source": "https://www.openstreetmap.org/node/2921494804"
+  },
+  "Bolarum Bazar": {
+    "lat": 17.5176302,
+    "lon": 78.5156805,
+    "source": "https://www.openstreetmap.org/node/2923174838"
+  },
+  "Borabanda": {
+    "lat": 17.4590687,
+    "lon": 78.4078664,
+    "source": "https://www.openstreetmap.org/node/1437208985"
+  },
+  "Charlapalli": {
+    "lat": 17.4585975,
+    "lon": 78.6066056,
+    "source": "https://www.openstreetmap.org/node/1974699686"
+  },
+  "Dabirpura": {
+    "lat": 17.3665277,
+    "lon": 78.4901244,
+    "source": "https://www.openstreetmap.org/node/626897247"
+  },
+  "Falaknuma": {
+    "lat": 17.3326604,
+    "lon": 78.4751984,
+    "source": "https://www.openstreetmap.org/node/1118754390"
+  },
+  "Fateh Nagar": {
+    "lat": 17.4562011,
+    "lon": 78.4499241,
+    "source": "https://www.openstreetmap.org/node/2528193014"
+  },
+  "Hafeezpet": {
+    "lat": 17.4823997,
+    "lon": 78.3630141,
+    "source": "https://www.openstreetmap.org/node/886161862"
+  },
+  "Hitec City": {
+    "lat": 17.4698143,
+    "lon": 78.3853779,
+    "source": "https://www.openstreetmap.org/node/1425916857"
+  },
+  "Huppuguda": {
+    "lat": 17.3415227,
+    "lon": 78.4825047,
+    "source": "https://www.openstreetmap.org/node/2766428029"
+  },
+  "Hyderabad Deccan": {
+    "lat": 17.3924223,
+    "lon": 78.4675956,
+    "source": "https://www.openstreetmap.org/node/289656763"
+  },
+  "James Street": {
+    "lat": 17.4329515,
+    "lon": 78.4873218,
+    "source": "https://www.openstreetmap.org/node/893170355"
+  },
+  "Jamia Osmania": {
+    "lat": 17.4116226,
+    "lon": 78.5181614,
+    "source": "https://www.openstreetmap.org/node/308586608"
+  },
+  "Kacheguda": {
+    "lat": 17.389311,
+    "lon": 78.4992403,
+    "source": "https://www.openstreetmap.org/node/307023348"
+  },
+  "Lingampalli": {
+    "lat": 17.4831225,
+    "lon": 78.3177732,
+    "source": "https://www.openstreetmap.org/node/1936294138"
+  },
+  "Malakpet": {
+    "lat": 17.3765035,
+    "lon": 78.4948263,
+    "source": "https://www.openstreetmap.org/node/307015337"
+  },
+  "Malkajgiri": {
+    "lat": 17.4483438,
+    "lon": 78.5289727,
+    "source": "https://www.openstreetmap.org/node/1435327658"
+  },
+  "Medchal": {
+    "lat": 17.6399251,
+    "lon": 78.4753441,
+    "source": "https://www.openstreetmap.org/node/2962282515"
+  },
+  "Necklace Road": {
+    "lat": 17.4233355,
+    "lon": 78.4631857,
+    "source": "https://www.openstreetmap.org/node/289582401"
+  },
+  "RC Puram": {
+    "lat": 17.5102204,
+    "lon": 78.2824464,
+    "source": "https://www.openstreetmap.org/node/6598047610"
+  },
+  "Secunderabad Jn": {
+    "lat": 17.4338591,
+    "lon": 78.502051,
+    "source": "https://www.openstreetmap.org/node/10252989488"
+  },
+  "Sitafalmandi": {
+    "lat": 17.4272947,
+    "lon": 78.5207231,
+    "source": "https://www.openstreetmap.org/node/2084119304"
+  },
+  "Tellapur": {
+    "lat": 17.4749602,
+    "lon": 78.2849764,
+    "source": "https://www.openstreetmap.org/node/6594596014"
+  },
+  "Vidyanagar": {
+    "lat": 17.4018362,
+    "lon": 78.5108121,
+    "source": "https://www.openstreetmap.org/node/634132021"
+  },
+  "Yakutpura": {
+    "lat": 17.3600834,
+    "lon": 78.4921942,
+    "source": "https://www.openstreetmap.org/node/2766428030"
+  }
+}

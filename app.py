@@ -1415,8 +1415,13 @@ def route_map():
         })
     routes.sort(key=lambda route: (-route["passengers"], route["origin"], route["destination"]))
     stations = sorted(set(df["from_station"]) | set(df["to_station"]))
+    with open(os.path.join(app.root_path, "static", "data", "station_locations.json"), encoding="utf-8") as location_file:
+        station_locations = json.load(location_file)
+    with open(os.path.join(app.root_path, "static", "data", "route_geometry.json"), encoding="utf-8") as geometry_file:
+        route_geometry = json.load(geometry_file)["routes"]
     return render_template(
         "route_map.html", routes=routes, stations=stations, times=times,
+        station_locations=station_locations, route_geometry=route_geometry,
         day_type=day_type, departure_time=departure_time,
         date_start=df["datetime"].min().strftime("%d %b %Y"),
         date_end=df["datetime"].max().strftime("%d %b %Y"),

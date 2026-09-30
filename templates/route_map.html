@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RailPulse | Route Demand Map</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
@@ -99,7 +100,7 @@
             <div><strong id="highest-demand">{{ routes[0].passengers if routes else 0 }}</strong><span>Highest route average</span></div>
         </section>
         <section class="dashboard-card network-card">
-            <div class="map-heading"><div><span class="section-label">HYDERABAD MMTS</span><h2>Follow the demand</h2></div>
+            <div class="map-heading"><div><span class="section-label">HYDERABAD MMTS</span><h2>Explore Hyderabad</h2></div>
                 <div class="map-legend" aria-label="Demand legend"><span class="legend-low">Low: 0-402</span><span class="legend-medium">Medium: 403-642</span><span class="legend-high">High: 643+</span></div>
             </div>
             <div class="map-explore-filters">
@@ -107,17 +108,10 @@
                 <div><label for="demand-filter">Demand level</label><select id="demand-filter"><option value="">All levels</option><option>Low</option><option>Medium</option><option>High</option></select></div>
                 <div class="map-controls"><button type="button" id="map-zoom-in" aria-label="Zoom in">+</button><button type="button" id="map-zoom-out" aria-label="Zoom out">-</button><button type="button" id="map-fit">Fit map</button></div>
             </div>
-            <p class="map-hint">Select a line or a route below to see its demand. Select a station to show connected routes. Scroll the map after zooming.</p>
-            <div class="network-viewport" id="network-viewport">
-                <svg id="network-map" viewBox="0 0 1120 1000" role="img" aria-labelledby="map-title map-description">
-                    <title id="map-title">Hyderabad MMTS route demand network</title>
-                    <desc id="map-description">Schematic station layout. Colored curves connect route endpoints; the route list below provides the same demand information.</desc>
-                    <defs><pattern id="map-grid" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#ddd7c8"/></pattern></defs>
-                    <rect width="1120" height="1000" fill="url(#map-grid)"/>
-                    <g id="map-routes"></g><g id="map-stations"></g>
-                </svg>
-            </div>
-            <p class="map-context">Schematic network map, not to geographic scale. Lines connect origin and destination stations; they do not trace the actual railway track.</p>
+            <p class="map-hint">Colored lines show demand between places. Click a route line for its passenger demand. Arrows indicate travel direction; use the filters to explore individual routes.</p>
+            <div id="city-map" aria-label="Hyderabad city map with station demand markers"></div>
+            <p id="map-load-status" class="map-context" role="status" hidden></p>
+            <p class="map-context">Each line is colored by that directional route's average demand: green for low, amber for medium, red for high. Lines follow mapped railway tracks. Select a route to highlight it where routes share tracks. Paths use the shortest connected railway alignment; scheduled services may use different tracks. Street maps require an internet connection.</p>
             <div id="route-detail" class="route-detail" role="status" aria-live="polite">Select a route to inspect its average passenger demand.</div>
         </section>
         <section class="dashboard-card map-list-card">
@@ -138,6 +132,9 @@
     </main>
 </div>
 <script id="route-map-data" type="application/json">{{ routes|tojson }}</script>
+<script id="route-geometry-data" type="application/json">{{ route_geometry|tojson }}</script>
+<script id="station-location-data" type="application/json">{{ station_locations|tojson }}</script>
+<script src="{{ url_for('static', filename='vendor/leaflet/leaflet.js') }}" defer></script>
 <script src="{{ url_for('static', filename='js/route-map.js') }}" defer></script>
 </body>
 </html>
