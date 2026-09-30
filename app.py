@@ -1,10 +1,13 @@
 # ============================================================
-# RAILPULSE AI
+# RAILPULSE
 # Hyderabad MMTS Demand Intelligence System
 # Flask Backend
 # ============================================================
 
 import os
+import re
+import secrets
+from datetime import timedelta
 import json
 import sqlite3
 import joblib
@@ -44,6 +47,28 @@ app.secret_key = os.environ.get(
 # 2. FILE PATHS
 # ============================================================
 
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    PERMANENT_SESSION_LIFETIME=timedelta(days=7),
+)
+
+
+@app.context_processor
+def auth_template_helpers():
+    def csrf_token():
+        if "csrf_token" not in session:
+            session["csrf_token"] = secrets.token_urlsafe(32)
+        return session["csrf_token"]
+    return {"csrf_token": csrf_token}
+
+
+def valid_auth_token():
+    return secrets.compare_digest(
+        session.get("csrf_token", ""), request.form.get("csrf_token", "")
+    ) and bool(session.get("csrf_token"))
+
+
 DATABASE = "railpulse.db"
 
 DATA_FILE = "data/processed_train.csv"
@@ -82,7 +107,7 @@ for file in required_files:
 # 4. LOAD TRAINED ESN MODEL
 # ============================================================
 
-print("\nLoading RailPulse AI model...")
+print("\nLoading RailPulse model...")
 
 esn_data = joblib.load(
     MODEL_FILE
@@ -712,6 +737,51 @@ def generate_daily_crowd_forecast(
 # 15. LOGIN ROUTE
 # ============================================================
 
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if "user_id" in session:
+        return redirect(url_for("dashboard"))
+    if request.method == "POST":
+        full_name = request.form.get("full_name", "").strip()
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+        confirmation = request.form.get("confirm_password", "")
+        error = None
+        if not valid_auth_token():
+            error = "Your form expired. Please try again."
+        elif not 2 <= len(full_name) <= 80:
+            error = "Enter a full name between 2 and 80 characters."
+        elif not re.fullmatch(r"[A-Za-z0-9_.-]{3,30}", username):
+            error = "Use 3-30 letters, numbers, dots, underscores or hyphens for your username."
+        elif not 8 <= len(password) <= 128:
+            error = "Your password must contain 8-128 characters."
+        elif password != confirmation:
+            error = "Your passwords do not match."
+        if error is None:
+            connection = get_db_connection()
+            try:
+                existing = connection.execute(
+                    "SELECT id FROM users WHERE username = ? COLLATE NOCASE", (username,)
+                ).fetchone()
+                if existing:
+                    error = "That username is already taken. Choose another one."
+                else:
+                    connection.execute(
+                        "INSERT INTO users (username, password, full_name) VALUES (?, ?, ?)",
+                        (username, generate_password_hash(password), full_name),
+                    )
+                    connection.commit()
+            except sqlite3.IntegrityError:
+                error = "That username is already taken. Choose another one."
+            finally:
+                connection.close()
+            if error is None:
+                flash("Account created! Sign in with your new username and password.", "success")
+                return redirect(url_for("login"))
+        flash(error, "error")
+    return render_template("signup.html")
+
+
 @app.route(
     "/",
     methods=[
@@ -730,6 +800,10 @@ def login():
 
     if request.method == "POST":
 
+        if not valid_auth_token():
+            flash("Your form expired. Please try again.", "error")
+            return render_template("login.html"), 400
+
         username = request.form.get(
             "username",
             ""
@@ -747,7 +821,7 @@ def login():
             """
             SELECT *
             FROM users
-            WHERE username = ?
+            WHERE username = ? COLLATE NOCASE
             """,
             (username,)
         ).fetchone()
@@ -764,6 +838,8 @@ def login():
             )
         ):
 
+            session.clear()
+            session.permanent = request.form.get("remember") == "on"
             session["user_id"] = user["id"]
 
             session["username"] = user[
@@ -1378,7 +1454,7 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
 
     print(
-        "RailPulse AI is starting..."
+        "RailPulse is starting..."
     )
 
     print(
