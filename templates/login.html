@@ -9,9 +9,11 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/startup.css') }}">
 </head>
 
 <body class="login-page">
+    {% include "_startup.html" %}
 
     <div class="login-shell">
 

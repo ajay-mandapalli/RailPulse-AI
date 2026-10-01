@@ -6,9 +6,11 @@
     <title>RailPulse | Route Demand Map</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet/leaflet.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/startup.css') }}">
 </head>
 
 <body class="app-page">
+    {% include "_startup.html" %}
 <div class="app-layout">
 
     <aside class="sidebar">

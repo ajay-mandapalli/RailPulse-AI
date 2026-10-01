@@ -6303,3 +6303,155 @@ input[type="checkbox"] { accent-color: var(--terracotta); }
 .demand-route-line { cursor: pointer; }
 .demand-route-line:hover { stroke-width: 7; stroke-opacity: 1; }
 .station-popup button { display: block; margin-top: 10px; }
+
+/* =========================================================
+   RailPulse monochrome interface
+   Semantic demand colors remain in the components above.
+========================================================= */
+:root {
+    --forest: #171717;
+    --forest-light: #333333;
+    --terracotta: #171717;
+    --terracotta-dark: #000000;
+    --ochre: #525252;
+    --background: #fafafa;
+    --border: #e5e5e5;
+    --text: #171717;
+    --muted: #666666;
+}
+body { background: var(--background); -webkit-font-smoothing: antialiased; }
+button, input, select { font-family: inherit; }
+::selection { background: #171717; color: #fff; }
+:focus-visible { outline: 2px solid #171717; outline-offset: 4px; }
+.app-page, .login-page { background: var(--background); }
+
+/* Quiet navigation and a clear workspace boundary. */
+.sidebar { background: #fff; color: var(--text); border-right: 1px solid var(--border); overflow-y: auto; }
+.brand-icon, .user-avatar { background: #171717; color: #fff; box-shadow: none; border-radius: 8px; }
+.sidebar-brand { border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+.sidebar-brand span, .model-label, .model-row span, .user-details span, .logout-link { color: var(--muted); }
+.sidebar-brand span, .model-label, .user-details span { font-size: 10px; }
+.nav-link { color: #666; border: 1px solid transparent; border-radius: 6px; font-weight: 500; }
+.nav-link:hover { color: #171717; background: #fafafa; }
+.nav-link.active { color: #171717; background: #f2f2f2; border: 1px solid #e5e5e5; font-weight: 650; }
+.sidebar-model { background: #fafafa; border: 1px solid var(--border); margin-top: 32px; }
+.sidebar-footer { margin-top: auto; border-color: var(--border); }
+.user-details strong { font-size: 12px; }
+.logout-link { font-size: 12px; }
+.logout-link:hover { color: #171717; text-decoration: underline; }
+.model-status-dot, .model-online-dot { box-shadow: none; }
+.main-content { min-width: 0; padding: 40px clamp(20px, 3vw, 56px) 28px; }
+.topbar { padding-bottom: 28px; border-bottom: 1px solid var(--border); }
+.topbar h1 { color: var(--text); font-size: clamp(26px, 2.5vw, 36px); font-weight: 650; letter-spacing: -1.2px; line-height: 1.2; }
+.topbar p { color: var(--muted); font-size: 14px; line-height: 1.6; }
+.topbar-actions { flex-wrap: wrap; }
+.page-eyebrow, .section-label, .portal-label, .stat-label { color: #666; font-size: 10px; font-weight: 500; font-family: Consolas, 'Courier New', monospace; letter-spacing: 1.2px; }
+
+/* Flat surfaces, restrained borders, and readable data. */
+.stat-card, .dashboard-card, .recommendation-card, .forecast-summary-item { border: 1px solid var(--border); border-radius: 8px; background: #fff; box-shadow: none; }
+.stat-card, .dashboard-card { padding: 24px; min-width: 0; }
+.stats-grid, .analytics-kpis { gap: 16px; }
+.stat-card h2 { color: #171717; font-size: 32px; font-weight: 600; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
+.stat-card p { color: #666; font-size: 12px; line-height: 1.6; }
+.stat-card .stat-icon, .stat-card:nth-child(n) .stat-icon, .empty-icon, .pipeline-number, .status-icon, .action-icon { color: #525252; background: #f5f5f5; }
+.card-heading h3, .analytics-title, .prediction-process-card h3, .model-mini-card h3, .journey-status-card h3, .result-model-heading h3, .recommendation-content h3 { color: #171717; font-size: 18px; font-weight: 600; letter-spacing: -.4px; }
+.metric-item, .prediction-summary, .mini-metrics div, .result-metrics div, .dataset-grid div, .graph-metrics span, .analytics-note, .login-security, .map-summary > div, .route-detail { background: #fafafa; border: 1px solid var(--border); border-radius: 6px; }
+.metric-item span, .metric-item strong, .score-ring strong, .prediction-info-banner strong, .prediction-summary strong, .pipeline-item strong, .mini-metrics strong, .status-item strong, .result-metrics strong, .graph-metrics strong, .dataset-grid strong { color: #171717; }
+.metric-item span, .score-ring span, .prediction-info-banner p, .prediction-field small, .prediction-summary > span, .prediction-summary p, .pipeline-item p, .mini-metrics span, .mini-model-note, .status-item span, .result-model-heading p, .result-metrics span, .model-table small, .metric-help, .graph-metrics span, .analytics-note, .dataset-grid span, .recommendation-content p, .forecast-explanation p, .map-summary span { color: #666; font-size: 12px; line-height: 1.6; }
+.metric-item strong, .mini-metrics strong, .result-metrics strong { font-variant-numeric: tabular-nums; }
+.score-ring { background: conic-gradient(#171717 0deg 330deg, #ededed 330deg); }
+.data-table { font-size: 13px; }
+.data-table th { color: #666; font-size: 11px; font-weight: 500; background: #fafafa; border-color: var(--border); }
+.data-table td { padding: 17px 10px; color: #525252; border-color: #ededed; }
+.data-table tbody tr:hover, .selected-model-row { background: #fafafa; }
+.passenger-value { color: #171717 !important; font-variant-numeric: tabular-nums; }
+.model-pill, .comparison-badge { color: #525252; background: #f5f5f5; }
+.demand-pill, .model-pill, .active-badge, .comparison-badge { font-size: 10px; font-weight: 600; }
+.text-link, .field-number, .recommendation-content > span { color: #171717; }
+.text-link { font-size: 12px; text-underline-offset: 4px; }
+.text-link:hover { text-decoration: underline; }
+.empty-state { padding: 44px 20px; }
+.empty-state h4 { font-size: 16px; }
+.empty-state p { color: #666; font-size: 13px; line-height: 1.7; }
+.app-footer { margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border); color: #666; font-size: 11px; line-height: 1.7; }
+.analytics-image { border-color: var(--border); background: #fff; }
+.analytics-image img { filter: none; }
+
+/* Primary actions and form controls. */
+.primary-action, .login-button, .generate-button { background: #171717; color: #fff; border: 1px solid #171717; border-radius: 6px; box-shadow: none; min-height: 44px; font-size: 13px; font-weight: 500; transition: background .15s ease; }
+.primary-action:hover, .login-button:hover, .generate-button:hover { background: #333; box-shadow: none; transform: none; }
+.secondary-action, .result-outline-button { border-color: #dedede; color: #171717; border-radius: 6px; font-size: 13px; min-height: 44px; }
+.secondary-action:hover, .result-outline-button:hover { background: #f5f5f5; }
+.input-wrapper input, .prediction-field input, .prediction-field select, .map-filters select, .map-explore-filters select { border-color: #dedede; border-radius: 6px; background: #fff; color: #171717; font-size: 14px; }
+.input-wrapper input:focus, .prediction-field input:focus, .prediction-field select:focus { border-color: #171717; box-shadow: 0 0 0 3px #0000000d; }
+.form-group label, .prediction-field label { color: #333; font-size: 13px; font-weight: 500; }
+.prediction-field select:disabled { background: #f5f5f5; color: #767676; }
+.prediction-info-banner { background: #fafafa; border-color: var(--border); }
+.info-banner-icon, .recommendation-icon { background: #171717; }
+.input-icon, .login-security p, .login-footer { color: #666; }
+.login-security p { font-size: 12px; }
+
+/* A graphic rail grid gives the entry page its own identity. */
+.login-hero { background-color: #080808; background-image: linear-gradient(#ffffff08 1px, transparent 1px), linear-gradient(90deg, #ffffff08 1px, transparent 1px); background-size: 64px 64px; padding: 48px clamp(32px, 4vw, 72px); }
+.login-hero::after { width: 620px; height: 620px; border-color: #ffffff14; border-radius: 0; transform: rotate(45deg); right: -340px; bottom: -300px; }
+.login-hero .brand-icon { background: #fff; color: #171717; }
+.brand span { color: #a3a3a3; }
+.hero-content { margin-top: clamp(72px, 12vh, 140px); }
+.hero-content h1 { font-size: clamp(42px, 4.5vw, 68px); font-weight: 600; letter-spacing: -2.8px; line-height: 1.08; }
+.hero-content h1 span { color: #a3a3a3; }
+.hero-content > p { color: #a3a3a3; max-width: 430px; }
+.system-badge { color: #d4d4d4; border-color: #333; background: #111; border-radius: 5px; font-family: Consolas, 'Courier New', monospace; font-size: 10px; letter-spacing: .6px; line-height: 1.7; }
+.hero-stats { gap: 0; border-top: 1px solid #2a2a2a; padding-top: 28px; }
+.hero-stats > div { flex: 1; padding-right: 12px; }
+.hero-stats strong { font-weight: 500; font-variant-numeric: tabular-nums; }
+.hero-stats span { color: #a3a3a3; font-size: 12px; }
+.rail-decoration { opacity: .08; }
+.login-panel { background: #fff; }
+.login-heading h2 { font-weight: 600; letter-spacing: -1.2px; }
+.login-footer { font-size: 11px; }
+
+/* Dark feature panels anchor the otherwise light workspace. */
+.prediction-cta-card, .result-hero { background: #111; color: #fff; border: 1px solid #292929; box-shadow: none; }
+.prediction-cta-card h3 { color: #fff; font-size: 22px; letter-spacing: -.6px; }
+.prediction-cta-card .section-label, .result-kicker, .result-route span, .result-trip-meta, .forecast-status span, .forecast-status small { color: #a3a3a3; }
+.prediction-cta-card > p, .prediction-flow p { color: #b3b3b3; font-size: 12px; line-height: 1.7; }
+.prediction-flow span { color: #ddd; background: #262626; font-family: Consolas, monospace; font-size: 11px; }
+.cta-button { background: #fff; color: #171717; border: 1px solid #fff; border-radius: 6px; font-size: 13px; font-weight: 500; }
+.cta-button:hover { background: #e5e5e5; }
+.forecast-status strong, .result-route-line div { color: #fff; }
+.prediction-cta-card :focus-visible, .result-hero :focus-visible { outline-color: #fff; }
+
+/* Map controls share the shell; route colors still express demand. */
+.map-controls button, .map-route-row { background: #fff; }
+.map-controls button:hover, .map-route-row:hover, .map-route-row.selected { background: #f5f5f5; border-color: #171717; }
+.route-endpoint-icon { background: #171717; border-color: #fff; box-shadow: 0 2px 8px #0002; }
+#city-map { background: #f5f5f5; }
+.route-detail { border-left: 3px solid #171717; }
+
+@media (max-width: 760px) {
+    .app-layout { display: block; }
+    .sidebar { position: static; width: 100%; min-height: auto; padding: 16px; border-right: 0; border-bottom: 1px solid var(--border); overflow: visible; }
+    .sidebar-brand { justify-content: flex-start; padding: 0 0 14px; margin: 0; border: 0; }
+    .sidebar-brand div:not(.brand-icon), .nav-link span:last-child { display: block; }
+    .sidebar-nav { flex-direction: row; overflow-x: auto; gap: 6px; margin-top: 0; padding-bottom: 4px; }
+    .nav-link { flex-shrink: 0; padding: 10px 12px; min-height: 44px; font-size: 12px; gap: 6px; }
+    .nav-icon { width: 18px; }
+    .sidebar-footer { border: 0; padding-top: 10px; }
+    .sidebar-user { display: none; }
+    .logout-link { display: inline-block; margin: 0; padding: 6px 0; }
+    .main-content { width: 100%; margin-left: 0; padding: 28px 16px; }
+    .topbar { gap: 20px; }
+    .stat-card, .dashboard-card { padding: 20px; }
+    .card-heading { flex-wrap: wrap; gap: 12px; }
+    .result-hero { padding: 24px; }
+}
+@media (max-width: 480px) {
+    .login-panel { padding: 24px; }
+    .input-wrapper input, .prediction-field input, .prediction-field select, .map-filters select, .map-explore-filters select { font-size: 16px; }
+    .result-route strong { overflow-wrap: anywhere; }
+}
+
+/* Allow long journeys to wrap inside the results header on tablets. */
+.result-hero { flex-wrap: wrap; }
+.result-hero > div { min-width: 0; }
+.result-route { flex-wrap: wrap; }

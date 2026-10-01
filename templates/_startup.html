@@ -1,0 +1,69 @@
+<div class="rp-startup" id="rp-startup" aria-hidden="true" data-login-url="{{ url_for('login') }}" data-signup-url="{{ url_for('signup') }}" data-logout-url="{{ url_for('logout') }}">
+    <div class="rp-startup__brand">
+        <div class="rp-startup__eyebrow">HYDERABAD MMTS</div>
+        <div class="rp-startup__name">RailPulse<span class="rp-startup__dot"></span></div>
+        <div class="rp-startup__subtitle">Passenger Demand Intelligence System</div>
+    </div>
+    <div class="rp-startup__stage">
+        <div class="rp-startup__track"><div class="rp-startup__sleepers"></div></div>
+        <div class="rp-startup__train">
+            <svg class="rp-startup__vehicle" viewBox="0 0 720 136" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                <defs>
+                    <g id="rp-startup-wheel">
+                        <circle r="12" class="rp-startup__wheel-rim"/>
+                        <circle r="7" class="rp-startup__wheel-hub"/>
+                        <path d="M-7 0H7M0-7V7" class="rp-startup__spoke"/>
+                        <circle r="2" class="rp-startup__wheel-rim"/>
+                    </g>
+                </defs>
+                <!-- Three articulated passenger cars with a streamlined driving cab. -->
+                <g class="rp-startup__body">
+                    <path d="M24 32H207Q220 32 220 46V112H12V48Q12 32 24 32Z"/>
+                    <path d="M244 32H447Q460 32 460 46V112H232V46Q232 32 244 32Z"/>
+                    <path d="M484 32H642Q663 32 677 54L702 92Q710 112 690 112H472V46Q472 32 484 32Z"/>
+                </g>
+                <g class="rp-startup__roof">
+                    <rect x="48" y="24" width="126" height="6" rx="3"/>
+                    <rect x="278" y="24" width="126" height="6" rx="3"/>
+                    <rect x="514" y="24" width="108" height="6" rx="3"/>
+                    <path d="M313 24L331 9H367L349 24M326 7H377" fill="none" stroke="currentColor" stroke-width="3"/>
+                </g>
+                <g class="rp-startup__windows">
+                    <rect x="27" y="47" width="44" height="30" rx="5"/>
+                    <rect x="80" y="47" width="44" height="30" rx="5"/>
+                    <rect x="175" y="47" width="29" height="30" rx="5"/>
+                    <rect x="249" y="47" width="44" height="30" rx="5"/>
+                    <rect x="302" y="47" width="44" height="30" rx="5"/>
+                    <rect x="397" y="47" width="46" height="30" rx="5"/>
+                    <rect x="490" y="47" width="44" height="30" rx="5"/>
+                    <rect x="543" y="47" width="44" height="30" rx="5"/>
+                    <path d="M641 46Q655 46 664 61L675 78H643Q638 78 638 73V51Q638 46 641 46Z"/>
+                </g>
+                <g class="rp-startup__doors">
+                    <rect x="135" y="45" width="28" height="59" rx="3"/>
+                    <rect x="357" y="45" width="28" height="59" rx="3"/>
+                    <rect x="598" y="45" width="28" height="59" rx="3"/>
+                    <path d="M149 46V103M371 46V103M612 46V103"/>
+                </g>
+                <g class="rp-startup__stripe">
+                    <path d="M13 86H133V90H13ZM165 86H219V90H165ZM233 86H355V90H233ZM387 86H459V90H387ZM473 86H596V90H473ZM628 86H681L684 90H628Z"/>
+                </g>
+                <g class="rp-startup__undercarriage">
+                    <rect x="24" y="112" width="184" height="9" rx="3"/>
+                    <rect x="246" y="112" width="200" height="9" rx="3"/>
+                    <rect x="486" y="112" width="198" height="9" rx="3"/>
+                    <path d="M220 68H232V108H220ZM460 68H472V108H460Z"/>
+                </g>
+                <path d="M683 94H697" class="rp-startup__headlight"/>
+                <g transform="translate(48 123)"><g class="rp-startup__wheel"><use href="#rp-startup-wheel"/></g></g>
+                <g transform="translate(183 123)"><g class="rp-startup__wheel"><use href="#rp-startup-wheel"/></g></g>
+                <g transform="translate(269 123)"><g class="rp-startup__wheel"><use href="#rp-startup-wheel"/></g></g>
+                <g transform="translate(421 123)"><g class="rp-startup__wheel"><use href="#rp-startup-wheel"/></g></g>
+                <g transform="translate(509 123)"><g class="rp-startup__wheel"><use href="#rp-startup-wheel"/></g></g>
+                <g transform="translate(661 123)"><g class="rp-startup__wheel"><use href="#rp-startup-wheel"/></g></g>
+            </svg>
+        </div>
+    </div>
+    <div class="rp-startup__footer">RAILPULSE / DEMAND INTELLIGENCE</div>
+</div>
+<script src="{{ url_for('static', filename='js/startup.js') }}"></script>

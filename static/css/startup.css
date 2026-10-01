@@ -1,0 +1,158 @@
+/* Startup overlay only. All colors inherit the application's theme tokens. */
+.rp-startup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
+    overflow: hidden;
+    background: var(--background, Canvas);
+    color: var(--text, CanvasText);
+    font-family: inherit;
+    pointer-events: auto;
+    touch-action: none;
+}
+html.rp-startup-running {
+    overflow: hidden !important;
+}
+html.rp-startup-running body {
+    overflow: hidden !important;
+}
+.rp-startup.rp-startup--active {
+    display: block;
+    animation: rp-startup-dismiss 2.85s linear both;
+}
+.rp-startup__brand {
+    position: absolute;
+    top: 24%;
+    left: 24px;
+    right: 24px;
+    text-align: center;
+    animation: rp-startup-reveal .75s .45s cubic-bezier(.2,.7,.3,1) both;
+}
+.rp-startup__eyebrow, .rp-startup__footer {
+    color: var(--muted, GrayText);
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 10px;
+    letter-spacing: .18em;
+}
+.rp-startup__eyebrow { margin-bottom: 16px; }
+.rp-startup__name {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    font-size: clamp(42px, 7vw, 84px);
+    font-weight: 650;
+    letter-spacing: -.055em;
+    line-height: 1.1;
+}
+.rp-startup__dot {
+    width: .095em;
+    height: .095em;
+    margin-left: .08em;
+    background: var(--terracotta, currentColor);
+    border-radius: 50%;
+}
+.rp-startup__subtitle {
+    margin-top: 18px;
+    color: var(--muted, GrayText);
+    font-size: clamp(11px, 1.5vw, 15px);
+    line-height: 1.6;
+    letter-spacing: .025em;
+}
+.rp-startup__stage {
+    position: absolute;
+    top: 72%;
+    left: 0;
+    right: 0;
+    height: 28px;
+}
+.rp-startup__track {
+    position: absolute;
+    inset: 0;
+    border-top: 2px solid var(--muted, GrayText);
+    border-bottom: 1px solid var(--border, GrayText);
+}
+.rp-startup__sleepers {
+    position: absolute;
+    inset: 4px -40px 5px 0;
+    background: repeating-linear-gradient(90deg, var(--border, GrayText) 0 3px, transparent 3px 40px);
+    animation: rp-startup-sleepers .6s linear infinite;
+}
+.rp-startup__train {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: clamp(310px, 52vw, 720px);
+    animation: rp-startup-cross 2.4s cubic-bezier(.42,0,.32,1) both;
+    will-change: transform;
+}
+.rp-startup__vehicle {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    animation: rp-startup-ride .32s ease-in-out infinite alternate;
+}
+.rp-startup__body, .rp-startup__wheel-rim { fill: var(--text, CanvasText); }
+.rp-startup__roof, .rp-startup__undercarriage {
+    fill: var(--muted, GrayText);
+    color: var(--muted, GrayText);
+}
+.rp-startup__windows, .rp-startup__wheel-hub { fill: var(--background, Canvas); }
+.rp-startup__windows { opacity: .92; }
+.rp-startup__doors {
+    fill: none;
+    stroke: var(--background, Canvas);
+    stroke-width: 1;
+    opacity: .65;
+}
+.rp-startup__stripe { fill: var(--background, Canvas); opacity: .4; }
+.rp-startup__spoke { fill: none; stroke: var(--text, CanvasText); stroke-width: 1.5; }
+.rp-startup__headlight { stroke: var(--background, Canvas); stroke-width: 4; stroke-linecap: round; }
+.rp-startup__wheel {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: rp-startup-spin .45s linear infinite;
+}
+.rp-startup__footer {
+    position: absolute;
+    bottom: max(28px, env(safe-area-inset-bottom));
+    left: 20px;
+    right: 20px;
+    text-align: center;
+    font-size: 9px;
+}
+@keyframes rp-startup-cross {
+    0%, 5% { transform: translate3d(-110%,0,0); }
+    100% { transform: translate3d(100vw,0,0); }
+}
+@keyframes rp-startup-spin { to { transform: rotate(360deg); } }
+@keyframes rp-startup-sleepers { to { transform: translate3d(-40px,0,0); } }
+@keyframes rp-startup-ride { to { transform: translateY(-1px); } }
+@keyframes rp-startup-reveal {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes rp-startup-dismiss {
+    0%, 86% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@media (max-height: 650px) {
+    .rp-startup__brand { top: 12%; }
+    .rp-startup__name { font-size: 40px; }
+    .rp-startup__eyebrow { margin-bottom: 6px; }
+    .rp-startup__subtitle { margin-top: 8px; }
+    .rp-startup__stage { top: 76%; }
+    .rp-startup__train { width: 310px; }
+    .rp-startup__footer { bottom: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .rp-startup.rp-startup--active { animation: rp-startup-short-fade .25s ease-out both !important; }
+    .rp-startup__brand { animation: none !important; }
+    .rp-startup__stage { display: none; }
+    .rp-startup__vehicle, .rp-startup__wheel, .rp-startup__sleepers, .rp-startup__train { animation: none !important; }
+}
+@keyframes rp-startup-short-fade {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
