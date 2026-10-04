@@ -6455,3 +6455,73 @@ button, input, select { font-family: inherit; }
 .result-hero { flex-wrap: wrap; }
 .result-hero > div { min-width: 0; }
 .result-route { flex-wrap: wrap; }
+
+/* Approved branding and account controls; existing theme tokens remain unchanged. */
+.rp-brand-link { display:inline-flex; align-items:center; max-width:100%; text-decoration:none; border-radius:6px; }
+.rp-brand-full { display:block; width:190px; max-width:100%; height:auto; }
+.rp-brand-symbol { display:none; width:40px; height:40px; }
+.sidebar-brand .rp-brand-full { width:190px; }
+.rp-auth-brand { flex-direction:column; align-items:flex-start; gap:8px; }
+.rp-auth-brand .rp-brand-link { background:#faf8f5; padding:8px 12px; }
+.rp-auth-brand .rp-brand-full { width:210px; }
+.rp-auth-brand > span { font-size:11px; color:#d4d4d4; }
+.rp-account { position:relative; flex-shrink:0; margin-left:auto; }
+.rp-account summary { display:flex; gap:10px; align-items:center; cursor:pointer; list-style:none; padding:6px 8px; min-height:44px; border:1px solid var(--border); border-radius:6px; background:white; font-size:12px; }
+.rp-account summary::-webkit-details-marker { display:none; }
+.rp-avatar { display:grid; place-items:center; width:32px; height:32px; border-radius:50%; background:var(--forest); color:white; flex-shrink:0; }
+.rp-account-name { max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.rp-account-dropdown { position:absolute; top:calc(100% + 8px); right:0; width:210px; max-width:calc(100vw - 36px); padding:6px; background:white; border:1px solid var(--border); border-radius:8px; box-shadow:0 8px 24px #00000012; z-index:1000; }
+.rp-account-dropdown a { display:block; padding:11px 12px; min-height:44px; color:var(--text); text-decoration:none; border-radius:4px; }
+.rp-account-dropdown a:hover { background:var(--background); }
+.topbar { gap:16px; flex-wrap:wrap; }
+.topbar > div:first-child { min-width:0; }
+.rp-info-section { margin-top:22px; }
+.rp-info-section h2 { font-size:21px; margin:0 0 16px; }
+.rp-info-section h3 { font-size:16px; margin:20px 0 10px; }
+.rp-info-section p { font-size:14px; line-height:1.8; color:var(--muted); margin:12px 0; }
+.rp-about-logo { display:block; width:min(320px,100%); height:auto; margin-bottom:22px; }
+.rp-info-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
+.rp-feature-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px 30px; margin:0; padding-left:20px; font-size:14px; line-height:1.7; }
+.rp-workflow { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); list-style:none; padding:0; gap:14px; counter-reset:step; }
+.rp-workflow li { padding:16px; border:1px solid var(--border); border-radius:6px; font-size:13px; line-height:1.6; display:flex; align-items:center; gap:12px; }
+.rp-workflow li span { display:grid; place-items:center; background:var(--background); width:26px; height:26px; border-radius:50%; flex-shrink:0; }
+.rp-workflow li:not(:last-child)::after { content:"\2192"; margin-left:auto; color:var(--muted); }
+.rp-account-details { display:grid; grid-template-columns:140px minmax(0,1fr); gap:18px; font-size:14px; margin:22px 0; }
+.rp-account-details dt { color:var(--muted); }
+.rp-account-details dd { margin:0; overflow-wrap:anywhere; }
+.rp-processing[hidden] { display:none; }
+.rp-processing { position:fixed; inset:0; z-index:2147483646; display:grid; place-items:center; background:#fafafaeF; padding:24px; }
+.rp-processing-card { width:min(400px,100%); text-align:center; padding:36px 24px; background:white; border:1px solid var(--border); border-radius:8px; }
+.rp-processing-card img { animation:rp-processing-pulse 1.2s ease-in-out infinite; }
+.rp-processing-card p { margin:20px 0 12px; font-size:16px; line-height:1.6; }
+.rp-processing-card small { color:var(--muted); line-height:1.6; }
+@keyframes rp-processing-pulse { 50% { opacity:.55; transform:scale(.96); } }
+@media(max-width:1100px) and (min-width:761px) {
+ .sidebar .rp-brand-full { display:none; }
+ .sidebar .rp-brand-symbol { display:block; }
+}
+@media(max-width:760px) {
+ .sidebar .rp-brand-full { display:block; width:164px; }
+ .sidebar .rp-brand-symbol { display:none; }
+ .rp-info-grid,.rp-feature-list { grid-template-columns:1fr; }
+ .rp-workflow { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .topbar .rp-account { align-self:flex-end; }
+ .prediction-layout,.result-layout,.analytics-two-column { min-width:0; }
+ .daily-chart-container { min-width:0; width:100%; }
+ .map-filters select,.map-explore-filters select { min-width:0; }
+}
+@media(max-width:480px) {
+ .rp-workflow { grid-template-columns:1fr; }
+ .rp-workflow li:not(:last-child)::after { content:"\2193"; }
+ .rp-account-details { grid-template-columns:1fr; gap:8px; }
+ .rp-account-details dd { margin-bottom:12px; }
+ .topbar h1 { overflow-wrap:anywhere; }
+ .app-footer { flex-wrap:wrap; gap:8px; }
+ .result-route-line { flex-wrap:wrap; gap:12px; }
+}
+@media(prefers-reduced-motion:reduce) { .rp-processing-card img { animation:none; } }
+
+/* Let the existing Chart.js forecast shrink inside narrow grid columns. */
+.daily-forecast-section,.daily-forecast-card { min-width:0; max-width:100%; }
+.daily-forecast-card .card-heading > div { min-width:0; }
+.daily-chart-container canvas { max-width:100%; }

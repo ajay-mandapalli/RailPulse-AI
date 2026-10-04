@@ -1,0 +1,7 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96' role='img' aria-labelledby='title'><title id='title'>RailPulse symbol</title><g fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M32 76C25 76 21 71 21 64V30C21 17 32 10 48 10S75 17 75 30V64C75 71 71 76 64 76Z" stroke="#faf8f5" stroke-width="6"/>
+  <path d="M31 39V30C31 24 37 21 48 21S65 24 65 30V39" stroke="#faf8f5" stroke-width="4"/>
+  <path d="M13 46H33L40 37L48 55L56 46H83" stroke="#d88059" stroke-width="5"/>
+  <path d="M35 76L26 89M61 76L70 89M32 83H64" stroke="#faf8f5" stroke-width="5"/>
+  <path d="M32 64H36M60 64H64" stroke="#faf8f5" stroke-width="5"/>
+</g></svg>

@@ -1,7 +1,8 @@
-<div class="rp-startup" id="rp-startup" aria-hidden="true" data-login-url="{{ url_for('login') }}" data-signup-url="{{ url_for('signup') }}" data-logout-url="{{ url_for('logout') }}">
+{% if show_login_transition|default(false) %}
+<div class="rp-startup" id="rp-startup" aria-hidden="true">
     <div class="rp-startup__brand">
         <div class="rp-startup__eyebrow">HYDERABAD MMTS</div>
-        <div class="rp-startup__name">RailPulse<span class="rp-startup__dot"></span></div>
+        {% include "_approved_logo.html" %}
         <div class="rp-startup__subtitle">Passenger Demand Intelligence System</div>
     </div>
     <div class="rp-startup__stage">
@@ -67,3 +68,5 @@
     <div class="rp-startup__footer">RAILPULSE / DEMAND INTELLIGENCE</div>
 </div>
 <script src="{{ url_for('static', filename='js/startup.js') }}"></script>
+
+{% endif %}

@@ -10,6 +10,8 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/startup.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='branding/railpulse-symbol-primary.svg') }}">
+    <script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
 </head>
 
 <body class="app-page">
@@ -20,14 +22,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
 
-        <div class="sidebar-brand">
-            <div class="brand-icon">RP</div>
-
-            <div>
-                <h2>RailPulse</h2>
-                <span>MMTS Intelligence</span>
-            </div>
-        </div>
+        <div class="sidebar-brand">{% include "_brand.html" %}</div>
 
         <nav class="sidebar-nav">
 
@@ -58,6 +53,7 @@
                     <a href="{{ url_for('route_map') }}" class="nav-link" aria-label="Route Demand Map" title="Route Demand Map">
                 <span class="nav-icon" aria-hidden="true">&#9678;</span><span>Route Demand Map</span>
             </a>
+            <a href="{{ url_for('about') }}" class="nav-link" title="About RailPulse" aria-label="About RailPulse"><span class="nav-icon" aria-hidden="true">i</span><span>About RailPulse</span></a>
         </nav>
 
         <div class="sidebar-model">
@@ -139,7 +135,8 @@
 
             </div>
 
-        </header>
+        {% include "_account_menu.html" %}
+</header>
 
 
         <!-- RESULT HERO -->
@@ -687,7 +684,7 @@
             </span>
 
             <span>
-                © 2026 Mandapalli Ajaybabu
+                © MA
             </span>
 
         </footer>

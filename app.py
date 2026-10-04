@@ -849,6 +849,7 @@ def login():
             session["full_name"] = user[
                 "full_name"
             ]
+            session["show_login_transition"] = True
 
 
             return redirect(
@@ -935,7 +936,8 @@ def dashboard():
 
         total_predictions=total_predictions,
 
-        recent_predictions=recent_predictions
+        recent_predictions=recent_predictions,
+        show_login_transition=session.pop("show_login_transition", False)
     )
 
 
@@ -1486,6 +1488,31 @@ def logout():
 # ============================================================
 # 24. INITIALIZE DATABASE
 # ============================================================
+
+@app.route("/about")
+def about():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    return render_template("about.html", model_info=model_info, selected_model=SELECTED_MODEL)
+
+
+@app.route("/account")
+def account():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    connection = get_db_connection()
+    try:
+        user = connection.execute(
+            "SELECT username, full_name, created_at FROM users WHERE id = ?",
+            (session["user_id"],),
+        ).fetchone()
+    finally:
+        connection.close()
+    if user is None:
+        session.clear()
+        return redirect(url_for("login"))
+    return render_template("account.html", user=user)
+
 
 initialize_database()
 

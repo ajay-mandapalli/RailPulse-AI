@@ -19,7 +19,7 @@ html.rp-startup-running body {
 }
 .rp-startup.rp-startup--active {
     display: block;
-    animation: rp-startup-dismiss 2.85s linear both;
+    animation: rp-startup-dismiss 3.3s linear both;
 }
 .rp-startup__brand {
     position: absolute;
@@ -27,7 +27,7 @@ html.rp-startup-running body {
     left: 24px;
     right: 24px;
     text-align: center;
-    animation: rp-startup-reveal .75s .45s cubic-bezier(.2,.7,.3,1) both;
+
 }
 .rp-startup__eyebrow, .rp-startup__footer {
     color: var(--muted, GrayText);
@@ -36,22 +36,7 @@ html.rp-startup-running body {
     letter-spacing: .18em;
 }
 .rp-startup__eyebrow { margin-bottom: 16px; }
-.rp-startup__name {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    font-size: clamp(42px, 7vw, 84px);
-    font-weight: 650;
-    letter-spacing: -.055em;
-    line-height: 1.1;
-}
-.rp-startup__dot {
-    width: .095em;
-    height: .095em;
-    margin-left: .08em;
-    background: var(--terracotta, currentColor);
-    border-radius: 50%;
-}
+
 .rp-startup__subtitle {
     margin-top: 18px;
     color: var(--muted, GrayText);
@@ -83,7 +68,7 @@ html.rp-startup-running body {
     bottom: 100%;
     left: 0;
     width: clamp(310px, 52vw, 720px);
-    animation: rp-startup-cross 2.4s cubic-bezier(.42,0,.32,1) both;
+    animation: rp-startup-cross 2.1s .1s linear both;
     will-change: transform;
 }
 .rp-startup__vehicle {
@@ -91,7 +76,7 @@ html.rp-startup-running body {
     width: 100%;
     height: auto;
     overflow: visible;
-    animation: rp-startup-ride .32s ease-in-out infinite alternate;
+
 }
 .rp-startup__body, .rp-startup__wheel-rim { fill: var(--text, CanvasText); }
 .rp-startup__roof, .rp-startup__undercarriage {
@@ -128,18 +113,18 @@ html.rp-startup-running body {
 }
 @keyframes rp-startup-spin { to { transform: rotate(360deg); } }
 @keyframes rp-startup-sleepers { to { transform: translate3d(-40px,0,0); } }
-@keyframes rp-startup-ride { to { transform: translateY(-1px); } }
+
 @keyframes rp-startup-reveal {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 @keyframes rp-startup-dismiss {
-    0%, 86% { opacity: 1; }
+    0%, 85% { opacity: 1; }
     100% { opacity: 0; }
 }
 @media (max-height: 650px) {
     .rp-startup__brand { top: 12%; }
-    .rp-startup__name { font-size: 40px; }
+
     .rp-startup__eyebrow { margin-bottom: 6px; }
     .rp-startup__subtitle { margin-top: 8px; }
     .rp-startup__stage { top: 76%; }
@@ -147,7 +132,7 @@ html.rp-startup-running body {
     .rp-startup__footer { bottom: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .rp-startup.rp-startup--active { animation: rp-startup-short-fade .25s ease-out both !important; }
+    .rp-startup.rp-startup--active { animation: rp-startup-short-fade .4s ease-out both !important; }
     .rp-startup__brand { animation: none !important; }
     .rp-startup__stage { display: none; }
     .rp-startup__vehicle, .rp-startup__wheel, .rp-startup__sleepers, .rp-startup__train { animation: none !important; }
@@ -155,4 +140,18 @@ html.rp-startup-running body {
 @keyframes rp-startup-short-fade {
     from { opacity: 1; }
     to { opacity: 0; }
+}
+
+/* Exact approved paths; temporary reveal effects return to the approved appearance. */
+.rp-startup__logo { display:block; width:min(560px, calc(100vw - 48px)); height:auto; margin:0 auto; overflow:visible; }
+.rp-startup__symbol { animation:rp-startup-reveal .45s .8s ease both; }
+.rp-startup__pulse { stroke-dasharray:1; animation:rp-startup-signal .65s 1.15s ease both; }
+.rp-startup__wordmark { animation:rp-startup-wordmark .7s 1.3s ease both; }
+.rp-startup__eyebrow { animation:rp-startup-reveal .4s .75s ease both; }
+.rp-startup__subtitle { animation:rp-startup-reveal .4s 1.7s ease both; }
+@keyframes rp-startup-signal { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
+@keyframes rp-startup-wordmark { from { opacity:0; clip-path:inset(0 100% 0 0); } to { opacity:1; clip-path:inset(0); } }
+@media (prefers-reduced-motion:reduce) {
+ .rp-startup__symbol,.rp-startup__pulse,.rp-startup__wordmark,.rp-startup__eyebrow,.rp-startup__subtitle { animation:none; }
+ .rp-startup__pulse { stroke-dashoffset:0; }
 }

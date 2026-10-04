@@ -1,0 +1,8 @@
+<details class="rp-account">
+<summary aria-label="User account menu"><span class="rp-avatar" aria-hidden="true">{{ (session.get('full_name') or session.get('username') or 'U')[0]|upper }}</span><span class="rp-account-name">{{ session.get('full_name') or session.get('username') }}</span><span aria-hidden="true">&#9662;</span></summary>
+<nav class="rp-account-dropdown" aria-label="Account navigation">
+<a href="{{ url_for('dashboard') }}">Dashboard</a>
+<a href="{{ url_for('account') }}">Profile / Account</a>
+<a href="{{ url_for('about') }}">About RailPulse</a>
+<a href="{{ url_for('logout') }}">Logout</a>
+</nav></details>

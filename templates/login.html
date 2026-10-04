@@ -10,6 +10,8 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/startup.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='branding/railpulse-symbol-primary.svg') }}">
+    <script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
 </head>
 
 <body class="login-page">
@@ -20,14 +22,7 @@
         <!-- LEFT SIDE -->
         <section class="login-hero">
 
-            <div class="brand">
-                <div class="brand-icon">RP</div>
-
-                <div>
-                    <h2>RailPulse</h2>
-                    <span>MMTS Demand Intelligence</span>
-                </div>
-            </div>
+            <div class="brand rp-auth-brand">{% include "_brand.html" %}<span>MMTS Demand Intelligence</span></div>
 
             <div class="hero-content">
 
@@ -80,10 +75,7 @@
 
             <div class="login-card">
 
-                <div class="mobile-brand">
-                    <div class="brand-icon">RP</div>
-                    <h2>RailPulse</h2>
-                </div>
+                <div class="mobile-brand">{% include "_brand.html" %}</div>
 
                 <div class="login-heading">
 
@@ -245,7 +237,7 @@
 
 
                 <div class="login-footer">
-                    © 2026 Mandapalli Ajaybabu · RailPulse
+                    © MA · RailPulse
                 </div>
 
             </div>

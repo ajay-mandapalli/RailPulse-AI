@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title">
+<title id="title">RailPulse compact symbol</title>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round">
+<path d="M10 25C8 25 7 23 7 21V10C7 5 11 3 16 3S25 5 25 10V21C25 23 24 25 22 25Z" stroke="#152017" stroke-width="2"/>
+<path d="M4 15H11L13 12L16 18L19 15H28" stroke="#ac512f" stroke-width="2"/>
+<path d="M12 25L9 29M20 25L23 29M11 27H21" stroke="#152017" stroke-width="2"/>
+</g></svg>

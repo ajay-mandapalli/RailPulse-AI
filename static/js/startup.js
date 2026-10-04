@@ -1,59 +1,8 @@
-/* Show on the first visit and explicit sign-in, signup, or logout transitions. */
+/* Rendered by Flask once, only after successful authentication. */
 (() => {
     "use strict";
     const splash = document.getElementById("rp-startup");
     if (!splash) return;
-
-    // Replay once per tab, then only after an explicit authentication action.
-    const seenKey = "railpulse:startup:seen";
-    const pendingKey = "railpulse:startup:auth";
-    const authPaths = new Set(
-        [splash.dataset.loginUrl, splash.dataset.signupUrl, splash.dataset.logoutUrl]
-            .map(path => new URL(path, window.location.href).pathname)
-    );
-
-    function isAuthUrl(value) {
-        const url = new URL(value, window.location.href);
-        return url.origin === window.location.origin && authPaths.has(url.pathname);
-    }
-
-    function rememberAuthAction() {
-        try {
-            window.sessionStorage.setItem(pendingKey, "1");
-        } catch (_) {
-            // The referrer fallback below supports browsers with storage disabled.
-        }
-    }
-
-    // These listeners remain after the overlay is removed to identify the next load.
-    document.addEventListener("click", event => {
-        const link = event.target.closest("a[href]");
-        if (!link || event.defaultPrevented || event.button !== 0 ||
-            event.ctrlKey || event.metaKey || event.shiftKey || event.altKey ||
-            link.hasAttribute("download") || (link.target && link.target !== "_self")) return;
-        if (isAuthUrl(link.href)) rememberAuthAction();
-    });
-    document.addEventListener("submit", event => {
-        if (!event.defaultPrevented && isAuthUrl(event.target.action)) rememberAuthAction();
-    });
-
-    let shouldShow;
-    try {
-        shouldShow = !window.sessionStorage.getItem(seenKey) ||
-            window.sessionStorage.getItem(pendingKey) === "1";
-        window.sessionStorage.setItem(seenKey, "1");
-        window.sessionStorage.removeItem(pendingKey);
-    } catch (_) {
-        const navigation = performance.getEntriesByType("navigation")[0];
-        const referrer = document.referrer;
-        shouldShow = navigation?.type !== "reload" &&
-            (!referrer || new URL(referrer).origin !== window.location.origin ||
-             isAuthUrl(referrer) || isAuthUrl(window.location.href));
-    }
-    if (!shouldShow) {
-        splash.remove();
-        return;
-    }
 
     const root = document.documentElement;
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -99,14 +48,10 @@
     }
 
     // Install a fallback before locking scroll, including if animations are disabled.
-    fallback = window.setTimeout(finish, reducedMotion.matches ? 400 : 3200);
+    fallback = window.setTimeout(finish, reducedMotion.matches ? 500 : 3700);
     splash.addEventListener("animationend", event => {
         if (event.target === splash) finish();
-        if (event.target.classList.contains("rp-startup__train")) {
-            // Restore the page dimensions while the overlay is still opaque.
-            // Input remains blocked until the fade finishes and the overlay is removed.
-            root.classList.remove("rp-startup-running");
-        }
+
     });
     splash.addEventListener("animationcancel", event => {
         if (event.target === splash) finish();
@@ -121,7 +66,7 @@
     } else {
         protectPage();
     }
-    if (!reducedMotion.matches) root.classList.add("rp-startup-running");
+    root.classList.add("rp-startup-running");
     splash.classList.add("rp-startup--active");
 
     // Fail open if the stylesheet is unavailable or animations are overridden.
